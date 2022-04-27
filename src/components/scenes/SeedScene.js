@@ -1,7 +1,8 @@
 import * as Dat from 'dat.gui';
 import { Scene, Color } from 'three';
-import { Flower, Land } from 'objects';
+import { Flower, Land, Cube } from 'objects';
 import { BasicLights } from 'lights';
+import Grid from "../functions/Grid/grid";
 
 class SeedScene extends Scene {
     constructor() {
@@ -20,9 +21,15 @@ class SeedScene extends Scene {
 
         // Add meshes to scene
         const land = new Land();
+        const grid = new Grid();
+        grid.initializeCubes();
+        // const cube = grid.cubes[0];
         const flower = new Flower(this);
         const lights = new BasicLights();
-        this.add(land, flower, lights);
+        for (let i = 0; i < grid.cubes.length; i++) {
+            this.add(grid.cubes[i]);
+        }
+        this.add(flower, lights);
 
         // Populate GUI
         this.state.gui.add(this.state, 'rotationSpeed', -5, 5);
