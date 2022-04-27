@@ -35,6 +35,9 @@ controls.minDistance = 4;
 controls.maxDistance = 16;
 controls.update();
 
+
+window.addEventListener("keydown", cameraMovement, false);
+
 // Render loop
 const onAnimationFrameHandler = (timeStamp) => {
     controls.update();
@@ -43,6 +46,7 @@ const onAnimationFrameHandler = (timeStamp) => {
     window.requestAnimationFrame(onAnimationFrameHandler);
 };
 window.requestAnimationFrame(onAnimationFrameHandler);
+
 
 // Resize Handler
 const windowResizeHandler = () => {
