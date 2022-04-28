@@ -16,7 +16,7 @@ class Cube extends Group {
         this.reveal = false;
 
         loader.load(MODEL, (gltf) => {
-            this.scale.multiplyScalar(.08);
+            this.scale.multiplyScalar(.1);
             this.add(gltf.scene);
         });
     }
