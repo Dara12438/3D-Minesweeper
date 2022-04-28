@@ -42,8 +42,8 @@ class SeedScene extends Scene {
         const mouse3D = new Vector3((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerheight) * 2 - 1, 0);
         const raycaster = new Raycaster();
         raycaster.setFromCamera(mouse3D, camera);
-        const intersects = raycaster.intersectObject(this.grid.cubes);
-        console.log(intersects);
+        const intersects = raycaster.intersectObjects(this.grid.cubes);
+        // console.log(intersects);
         if (intersects.length > 0) {
             return intersects[0];
         }
