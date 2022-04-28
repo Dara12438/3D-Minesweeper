@@ -129,4 +129,4 @@ class FilledGrid extends Group {
     }
 }
 
-//export default FilledGrid;
+export default FilledGrid;

@@ -1,5 +1,5 @@
 import * as Dat from 'dat.gui';
-import { Scene, Color, Vector2, Raycaster, Renderer } from 'three';
+import { Scene, Color, Vector2, Raycaster } from 'three';
 import * as THREE from 'three';
 import { Flower, Land, Cube } from 'objects';
 import { BasicLights } from 'lights';
