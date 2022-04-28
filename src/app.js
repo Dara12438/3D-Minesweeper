@@ -9,7 +9,6 @@
 import { WebGLRenderer, PerspectiveCamera, Vector3 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { SeedScene } from 'scenes';
-import * as THREE from 'three';
 
 // Initialize core ThreeJS components
 const scene = new SeedScene();
@@ -38,6 +37,8 @@ controls.update();
 
 
 window.addEventListener("keydown", cameraMovement, false);
+document.addEventListener("mouseover", onMouseOver);
+document.addEventListener("click", onClick);
 
 function cameraMovement(event) {
     const keyMap = {
@@ -48,6 +49,14 @@ function cameraMovement(event) {
        };
      const key = keyMap[event.key];
      camera.position.add(key);
+}
+
+function onMouseOver(event) {
+    scene.checkCube(event, camera);
+}
+
+function onClick(event) {
+    scene.revealCube(event, camera);
 }
 
 // Render loop

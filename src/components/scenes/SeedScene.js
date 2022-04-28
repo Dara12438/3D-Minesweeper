@@ -1,5 +1,5 @@
 import * as Dat from 'dat.gui';
-import { Scene, Color } from 'three';
+import { Scene, Color, Vector3, Raycaster } from 'three';
 import { Flower, Land, Cube } from 'objects';
 import { BasicLights } from 'lights';
 // import { Grid } from '../Grids';
@@ -23,18 +23,46 @@ class SeedScene extends Scene {
         // Add meshes to scene
         const land = new Land();
         // const grid = new Grid();
-        const grid = new HollowGrid();
+        this.grid = new HollowGrid();
         // grid.initializeCubes();
         const cube = new Cube();
         const flower = new Flower(this);
         const lights = new BasicLights();
-        for (let i = 0; i < grid.cubes.length; i++) {
-            this.add(grid.cubes[i]);
+        for (let i = 0; i < this.grid.cubes.length; i++) {
+            this.add(this.grid.cubes[i]);
         }
         this.add(flower, lights);
 
         // Populate GUI
         this.state.gui.add(this.state, 'rotationSpeed', -5, 5);
+    }
+
+    getNearestCube(event, camera) {
+        event.preventDefault();
+        const mouse3D = new Vector3((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerheight) * 2 - 1, 0);
+        const raycaster = new Raycaster();
+        raycaster.setFromCamera(mouse3D, camera);
+        const intersects = raycaster.intersectObject(this.grid.cubes);
+        console.log(intersects);
+        if (intersects.length > 0) {
+            return intersects[0];
+        }
+    }
+
+    checkCube(event, camera) {
+        const cube = this.getNearestCube(event, camera);
+        // console.log(cube);
+        if (cube != undefined && cube.reveal) {
+            console.log(cube.numNeighbors);
+        }
+    }
+
+    revealCube(event, camera) {
+        const cube = this.getNearestCube(event, camera);
+        // console.log(cube);
+        if (cube != undefined && !cube.isBomb && !cube.reveal) {
+            cube.reveal = true;
+        }
     }
 
     addToUpdateList(object) {
