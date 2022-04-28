@@ -9,6 +9,7 @@
 import { WebGLRenderer, PerspectiveCamera, Vector3 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { SeedScene } from 'scenes';
+import * as THREE from 'three';
 
 // Initialize core ThreeJS components
 const scene = new SeedScene();
@@ -40,10 +41,10 @@ window.addEventListener("keydown", cameraMovement, false);
 
 function cameraMovement(event) {
     const keyMap = {
-         ArrowUp: new THREE.Vector3(0,  1,  0),
-         ArrowDown: new THREE.Vector3(0,  -1,  0),
-         ArrowLeft: new THREE.Vector3(-1,  0,  0),
-         ArrowRight: new THREE.Vector3(1,  0,  0),
+         ArrowUp: new Vector3(0,  1,  0),
+         ArrowDown: new Vector3(0,  -1,  0),
+         ArrowLeft: new Vector3(-1,  0,  0),
+         ArrowRight: new Vector3(1,  0,  0),
        };
      const key = keyMap[event.key];
      camera.position.add(key);
