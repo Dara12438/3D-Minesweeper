@@ -8,9 +8,11 @@ class HollowGrid extends Group {
         super();
 
         this.name = 'hollow';
-        this.numBombs = 10;
+        this.numBombs = 20;
         this.size = 10;
         this.cubes = [];
+        this.cubeMeshs = [];
+        const offset = this.size/2;
 
         // create cubes
         for (let x = 0; x < this.size; x++) {
@@ -18,8 +20,9 @@ class HollowGrid extends Group {
                 for (let z = 0; z < this.size; z++) {
                     if (x == 0 || x == this.size - 1 || y == 0 || y == this.size - 1 || z == 0 || z == this.size - 1) {
                         const cube = new Cube();
-                        cube.position.copy(new THREE.Vector3(x, y, z));
+                        cube.mesh.position.copy(new THREE.Vector3(x, y, z).subScalar(offset));
                         this.cubes.push(cube);
+                        this.cubeMeshs.push(cube.mesh);
                     }
                 }
             }
@@ -31,9 +34,9 @@ class HollowGrid extends Group {
         while (index < this.numBombs) {
             const rand = Math.floor(Math.random() * this.cubes.length);
 
-            if (!this.cubes[rand].isBomb) {
-                this.cubes[index].isBomb = true;
-                bombs.push(this.cubes[rand]);
+            if (!this.cubes[rand].mesh.isBomb) {
+                this.cubes[rand].mesh.isBomb = true;
+                bombs.push(this.cubes[rand].mesh);
                 index++;
             }
         }
@@ -41,90 +44,90 @@ class HollowGrid extends Group {
         // determine neighboring bombs
         for (let i = 0; i < this.cubes.length; i++) {
             for (let j = 0; j < bombs.length; j++) {
-                const pos = this.cubes[i].position.clone();
+                const pos = this.cubes[i].mesh.position.clone();
 
                 if (bombs[j].position.equals(pos.clone().setX(pos.x - 1))) {
-                    this.cubes[i].numNeighbors++;
+                    this.cubes[i].mesh.numNeighbors++;
                 }
                 if (bombs[j].position.equals(pos.clone().setX(pos.x - 1).setY(pos.y - 1))) {
-                    this.cubes[i].numNeighbors++;
+                    this.cubes[i].mesh.numNeighbors++;
                 }
                 if (bombs[j].position.equals(pos.clone().setX(pos.x - 1).setY(pos.y - 1).setZ(pos.z - 1))) {
-                    this.cubes[i].numNeighbors++;
+                    this.cubes[i].mesh.numNeighbors++;
                 }
                 if (bombs[j].position.equals(pos.clone().setX(pos.x - 1).setY(pos.y - 1).setZ(pos.z + 1))) {
-                    this.cubes[i].numNeighbors++;
+                    this.cubes[i].mesh.numNeighbors++;
                 }
                 if (bombs[j].position.equals(pos.clone().setX(pos.x - 1).setY(pos.y + 1))) {
-                    this.cubes[i].numNeighbors++;
+                    this.cubes[i].mesh.numNeighbors++;
                 }
                 if (bombs[j].position.equals(pos.clone().setX(pos.x - 1).setY(pos.y + 1).setZ(pos.z - 1))) {
-                    this.cubes[i].numNeighbors++;
+                    this.cubes[i].mesh.numNeighbors++;
                 }
                 if (bombs[j].position.equals(pos.clone().setX(pos.x - 1).setY(pos.y + 1).setZ(pos.z + 1))) {
-                    this.cubes[i].numNeighbors++;
+                    this.cubes[i].mesh.numNeighbors++;
                 }
                 if (bombs[j].position.equals(pos.clone().setX(pos.x - 1).setZ(pos.z - 1))) {
-                    this.cubes[i].numNeighbors++;
+                    this.cubes[i].mesh.numNeighbors++;
                 }
                 if (bombs[j].position.equals(pos.clone().setX(pos.x - 1).setZ(pos.z + 1))) {
-                    this.cubes[i].numNeighbors++;
+                    this.cubes[i].mesh.numNeighbors++;
                 }
 
                 if (bombs[j].position.equals(pos.clone().setX(pos.x + 1))) {
-                    this.cubes[i].numNeighbors++;
+                    this.cubes[i].mesh.numNeighbors++;
                 }
                 if (bombs[j].position.equals(pos.clone().setX(pos.x + 1).setY(pos.y - 1))) {
-                    this.cubes[i].numNeighbors++;
+                    this.cubes[i].mesh.numNeighbors++;
                 }
                 if (bombs[j].position.equals(pos.clone().setX(pos.x + 1).setY(pos.y - 1).setZ(pos.z - 1))) {
-                    this.cubes[i].numNeighbors++;
+                    this.cubes[i].mesh.numNeighbors++;
                 }
                 if (bombs[j].position.equals(pos.clone().setX(pos.x + 1).setY(pos.y - 1).setZ(pos.z + 1))) {
-                    this.cubes[i].numNeighbors++;
+                    this.cubes[i].mesh.numNeighbors++;
                 }
                 if (bombs[j].position.equals(pos.clone().setX(pos.x + 1).setY(pos.y + 1))) {
-                    this.cubes[i].numNeighbors++;
+                    this.cubes[i].mesh.numNeighbors++;
                 }
                 if (bombs[j].position.equals(pos.clone().setX(pos.x + 1).setY(pos.y + 1).setZ(pos.z - 1))) {
-                    this.cubes[i].numNeighbors++;
+                    this.cubes[i].mesh.numNeighbors++;
                 }
                 if (bombs[j].position.equals(pos.clone().setX(pos.x + 1).setY(pos.y + 1).setZ(pos.z + 1))) {
-                    this.cubes[i].numNeighbors++;
+                    this.cubes[i].mesh.numNeighbors++;
                 }
                 if (bombs[j].position.equals(pos.clone().setX(pos.x + 1).setZ(pos.z - 1))) {
-                    this.cubes[i].numNeighbors++;
+                    this.cubes[i].mesh.numNeighbors++;
                 }
                 if (bombs[j].position.equals(pos.clone().setX(pos.x + 1).setZ(pos.z + 1))) {
-                    this.cubes[i].numNeighbors++;
+                    this.cubes[i].mesh.numNeighbors++;
                 }
 
 
                 if (bombs[j].position.equals(pos.clone().setY(pos.y - 1))) {
-                    this.cubes[i].numNeighbors++;
+                    this.cubes[i].mesh.numNeighbors++;
                 }
                 if (bombs[j].position.equals(pos.clone().setY(pos.y - 1).setZ(pos.z - 1))) {
-                    this.cubes[i].numNeighbors++;
+                    this.cubes[i].mesh.numNeighbors++;
                 }
                 if (bombs[j].position.equals(pos.clone().setY(pos.y - 1).setZ(pos.z + 1))) {
-                    this.cubes[i].numNeighbors++;
+                    this.cubes[i].mesh.numNeighbors++;
                 }
 
                 if (bombs[j].position.equals(pos.clone().setY(pos.y + 1))) {
-                    this.cubes[i].numNeighbors++;
+                    this.cubes[i].mesh.numNeighbors++;
                 }
                 if (bombs[j].position.equals(pos.clone().setY(pos.y + 1).setZ(pos.z - 1))) {
-                    this.cubes[i].numNeighbors++;
+                    this.cubes[i].mesh.numNeighbors++;
                 }
                 if (bombs[j].position.equals(pos.clone().setY(pos.y + 1).setZ(pos.z + 1))) {
-                    this.cubes[i].numNeighbors++;
+                    this.cubes[i].mesh.numNeighbors++;
                 }
 
                 if (bombs[j].position.equals(pos.clone().setZ(pos.z - 1))) {
-                    this.cubes[i].numNeighbors++;
+                    this.cubes[i].mesh.numNeighbors++;
                 }
                 if (bombs[j].position.equals(pos.clone().setZ(pos.z + 1))) {
-                    this.cubes[i].numNeighbors++;
+                    this.cubes[i].mesh.numNeighbors++;
                 }
             }
         }

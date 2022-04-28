@@ -14,10 +14,15 @@ import { SeedScene } from 'scenes';
 const scene = new SeedScene();
 const camera = new PerspectiveCamera();
 const renderer = new WebGLRenderer({ antialias: true });
+let mouseX;
+let mouseY;
 
 // Set up camera
-camera.position.set(6, 3, -10);
+// camera.position.set(6, 3, -10);
+camera.position.set(25, 25, -25);
 camera.lookAt(new Vector3(0, 0, 0));
+
+
 
 // Set up renderer, canvas, and minor CSS adjustments
 renderer.setPixelRatio(window.devicePixelRatio);
@@ -32,13 +37,14 @@ const controls = new OrbitControls(camera, canvas);
 controls.enableDamping = true;
 controls.enablePan = false;
 controls.minDistance = 4;
-controls.maxDistance = 16;
+controls.maxDistance = 25;
 controls.update();
 
 
 window.addEventListener("keydown", cameraMovement, false);
-document.addEventListener("mouseover", onMouseOver);
-document.addEventListener("click", onClick);
+canvas.addEventListener("mousemove", onMouseMove, false);
+canvas.addEventListener("mousedown", onMouseDown, false);
+canvas.addEventListener("mouseup", onMouseUp, false);
 
 function cameraMovement(event) {
     const keyMap = {
@@ -48,15 +54,30 @@ function cameraMovement(event) {
          ArrowRight: new Vector3(1,  0,  0),
        };
      const key = keyMap[event.key];
+     if (key !== undefined) {
      camera.position.add(key);
+    }
 }
 
-function onMouseOver(event) {
+function onMouseMove(event) {
     scene.checkCube(event, camera);
 }
 
-function onClick(event) {
-    scene.revealCube(event, camera);
+function onMouseDown(event) {
+    mouseX = event.clientX;
+    mouseY = event.clientY;
+}
+
+function onMouseUp(event) {
+    if (Math.abs(mouseX - event.clientX) + Math.abs(mouseY - event.clientY) > 4) {
+        return;
+    }
+    if (event.button == 0) {
+        scene.revealCube(event, camera);
+    }
+    else {
+        scene.flagCube(event,camera);
+    }
 }
 
 // Render loop
