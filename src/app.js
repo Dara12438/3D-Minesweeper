@@ -38,6 +38,17 @@ controls.update();
 
 window.addEventListener("keydown", cameraMovement, false);
 
+function cameraMovement(event) {
+    const keyMap = {
+         ArrowUp: new THREE.Vector3(0,  1,  0),
+         ArrowDown: new THREE.Vector3(0,  -1,  0),
+         ArrowLeft: new THREE.Vector3(-1,  0,  0),
+         ArrowRight: new THREE.Vector3(1,  0,  0),
+       };
+     const key = keyMap[event.key];
+     camera.position.add(key);
+}
+
 // Render loop
 const onAnimationFrameHandler = (timeStamp) => {
     controls.update();

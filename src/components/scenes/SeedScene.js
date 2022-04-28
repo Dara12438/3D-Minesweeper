@@ -2,7 +2,8 @@ import * as Dat from 'dat.gui';
 import { Scene, Color } from 'three';
 import { Flower, Land, Cube } from 'objects';
 import { BasicLights } from 'lights';
-import HollowGrid from "../functions/Grids/HollowGrid/hollow";
+// import { Grid } from '../Grids';
+import { HollowGrid } from "../Grids";
 
 class SeedScene extends Scene {
     constructor() {
@@ -21,9 +22,10 @@ class SeedScene extends Scene {
 
         // Add meshes to scene
         const land = new Land();
+        // const grid = new Grid();
         const grid = new HollowGrid();
         // grid.initializeCubes();
-        // const cube = grid.cubes[0];
+        const cube = new Cube();
         const flower = new Flower(this);
         const lights = new BasicLights();
         for (let i = 0; i < grid.cubes.length; i++) {
