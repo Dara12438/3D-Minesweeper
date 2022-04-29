@@ -66,7 +66,7 @@ class SeedScene extends Scene {
         // console.log(cube);
         if (cube != undefined) {
             const revealMat = new THREE.MeshMatcapMaterial({ color: 0x9e9e9e });
-            cube.material.color.multiplyScalar(0.5).add(new Color(0xfff44f).multiplyScalar(0.5));
+            // cube.material.color.multiplyScalar(0.5).add(new Color(0xfff44f).multiplyScalar(0.5));
             // console.log(cube.numNeighbors);
         }
     }
