@@ -11,7 +11,6 @@ class HollowGrid extends Group {
         this.numBombs = 20;
         this.size = 10;
         this.cubes = [];
-        this.cubeMeshs = [];
         const offset = this.size/2;
 
         // create cubes
@@ -22,12 +21,11 @@ class HollowGrid extends Group {
                         const cube = new Cube();
                         cube.mesh.position.copy(new THREE.Vector3(x, y, z).subScalar(offset));
                         this.cubes.push(cube);
-                        this.cubeMeshs.push(cube.mesh);
                     }
                 }
             }
         }
-
+        
         // create bombs
         this.bombs = [];
         let index = 0;

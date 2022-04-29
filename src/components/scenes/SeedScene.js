@@ -22,6 +22,15 @@ class SeedScene extends Scene {
         // Set background to a nice color
         this.background = new Color(0x7ec0ee);
 
+        this.revealMat = [];
+        var revealTex = new THREE.TextureLoader().load( 'src/components/images/bomb.png');
+        this.revealMat.push(new THREE.MeshMatcapMaterial({ map: revealTex }));
+        for (let i = 1; i < 9; i++) {
+            revealTex = new THREE.TextureLoader().load( 'src/components/images/'+i+'.png');
+            this.revealMat.push(new THREE.MeshMatcapMaterial({ map: revealTex }));
+        }
+        this.revealMat.push(new THREE.MeshMatcapMaterial({ map: new THREE.TextureLoader().load( 'src/components/images/exclaim.png') }));
+        this.revealMat.push(new THREE.MeshMatcapMaterial({ map: new THREE.TextureLoader().load( 'src/components/images/question.png') }));
         // Add meshes to scene
         // const land = new Land();
         // const grid = new Grid();
@@ -55,7 +64,9 @@ class SeedScene extends Scene {
         const cube = this.getNearestCube(event, camera);
         // console.log("check");
         // console.log(cube);
-        if (cube != undefined && !cube.reveal) {
+        if (cube != undefined) {
+            const revealMat = new THREE.MeshMatcapMaterial({ color: 0x9e9e9e });
+            cube.material.color.multiplyScalar(0.5).add(new Color(0xfff44f).multiplyScalar(0.5));
             // console.log(cube.numNeighbors);
         }
     }
@@ -72,20 +83,16 @@ class SeedScene extends Scene {
                 this.revealNeighboringCubes(cube);
             }
             else {
-                const revealTex = new THREE.TextureLoader().load( 'src/components/images/'+cube.numNeighbors+'.png');
-                const revealMat = new THREE.MeshMatcapMaterial({ map: revealTex });
-                cube.material = revealMat;
+                cube.material = this.revealMat[cube.numNeighbors];;
             }
         }
         this.checkWin();
 
         if (cube != undefined && cube.isBomb) {
             cube.reveal = true;
-            const revealTex = new THREE.TextureLoader().load( 'src/components/images/bomb.png');
-            const revealMat = new THREE.MeshMatcapMaterial({ map: revealTex });
-            cube.material = revealMat;
-            this.gameOver = true;
+            cube.material = this.revealMat[0];
             this.revealBombs();
+            this.gameOver = true;
             console.log("You hit a bomb!")
         }
     }
@@ -94,9 +101,7 @@ class SeedScene extends Scene {
         for (let i = 0; i < this.grid.bombs.length; i++) {
             if (!this.grid.bombs[i].reveal) {
                 this.grid.bombs[i].reveal = true;
-                const revealTex = new THREE.TextureLoader().load( 'src/components/images/bomb.png');
-                const revealMat = new THREE.MeshMatcapMaterial({ map: revealTex });
-                this.grid.bombs[i].material = revealMat;
+                this.grid.bombs[i].material = this.revealMat[0];
             }
         }
     }
@@ -105,20 +110,15 @@ class SeedScene extends Scene {
         const cube = this.getNearestCube(event, camera);
         if (cube != undefined && !cube.reveal) {
             if (cube.flag == 0) {
-                const flagTex = new THREE.TextureLoader().load( 'src/components/images/exclaim.png' );
-                const flagMat = new THREE.MeshMatcapMaterial({ map: flagTex });
-                cube.material = flagMat;
+                cube.material = this.revealMat[9];
                 cube.flag = 1;     
             }
             else if (cube.flag == 1) {
-                const flagTex = new THREE.TextureLoader().load( 'src/components/images/question.png' );
-                const flagMat = new THREE.MeshMatcapMaterial({ map: flagTex });
-                cube.material = flagMat; 
+                cube.material = this.revealMat[10];; 
                 cube.flag = 2;
             }
             else if (cube.flag == 2) {
-                const flagMat = new THREE.MeshMatcapMaterial();
-                cube.material = flagMat; 
+                cube.material = new THREE.MeshMatcapMaterial(); 
                 cube.flag = 0;
             }
         }
@@ -135,9 +135,9 @@ class SeedScene extends Scene {
     }
 
     revealNeighboringCubes(cube) {
-        for (let i = 0; i < this.grid.cubeMeshs.length; i++) {
+        for (let i = 0; i < this.grid.cubes.length; i++) {
             const pos = cube.position.clone();
-            const curr = this.grid.cubeMeshs[i];
+            const curr = this.grid.cubes[i].mesh;
 
             const isNeighbor = !curr.reveal && (curr.position.equals(pos.clone().setX(pos.x - 1)) ||
             curr.position.equals(pos.clone().setX(pos.x - 1).setY(pos.y - 1)) ||
@@ -174,9 +174,9 @@ class SeedScene extends Scene {
                     this.revealNeighboringCubes(curr);
                 }
                 else {
-                    const revealTex = new THREE.TextureLoader().load( 'src/components/images/'+curr.numNeighbors+'.png');
-                    const revealMat = new THREE.MeshMatcapMaterial({ map: revealTex });
-                    curr.material = revealMat;
+                    // const revealTex = new THREE.TextureLoader().load( 'src/components/images/'+curr.numNeighbors+'.png');
+                    // const revealMat = new THREE.MeshMatcapMaterial({ map: revealTex });
+                    curr.material = this.revealMat[curr.numNeighbors];
                 }
             }
 
