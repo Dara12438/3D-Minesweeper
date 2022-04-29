@@ -8,7 +8,7 @@ class HollowGrid extends Group {
         super();
 
         this.name = 'hollow';
-        this.numBombs = 2;
+        this.numBombs = 20;
         this.size = 10;
         this.cubes = [];
         this.cubeMeshs = [];
