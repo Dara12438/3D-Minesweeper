@@ -60,7 +60,9 @@ function cameraMovement(event) {
 }
 
 function onMouseMove(event) {
-    scene.checkCube(event, camera);
+    if (!scene.gameOver) {
+        scene.checkCube(event, camera);
+    }
 }
 
 function onMouseDown(event) {
@@ -72,11 +74,13 @@ function onMouseUp(event) {
     if (Math.abs(mouseX - event.clientX) + Math.abs(mouseY - event.clientY) > 4) {
         return;
     }
-    if (event.button == 0) {
-        scene.revealCube(event, camera);
-    }
-    else {
-        scene.flagCube(event,camera);
+    if (!scene.gameOver) {
+        if (event.button == 0) {
+            scene.revealCube(event, camera);
+        }
+        else {
+            scene.flagCube(event,camera);
+        }
     }
 }
 

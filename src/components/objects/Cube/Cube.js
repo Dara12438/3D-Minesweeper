@@ -20,6 +20,7 @@ class Cube extends Group {
         // const texture = new THREE.TextureLoader().load( 'src/components/images/tiles-1_dragged.png' );
 
         const geometry = new THREE.BoxGeometry( 0.95, 0.95, 0.95 );
+        // const geometry = new THREE.BoxGeometry( 0.99, 0.99, 0.99 );
         const material = new THREE.MeshMatcapMaterial();
         // const material = new THREE.MeshMatcapMaterial({ map: texture });
         // const material = new THREE.MeshStandardMaterial();
