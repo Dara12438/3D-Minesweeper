@@ -20,11 +20,14 @@ class Cube extends Group {
         // const texture = new THREE.TextureLoader().load( 'src/components/images/tiles-1_dragged.png' );
 
         const geometry = new THREE.BoxGeometry( 0.95, 0.95, 0.95 );
+        // const geometry = new THREE.BoxGeometry( 0.5, 0.5, .5 );
         // const geometry = new THREE.BoxGeometry( 0.99, 0.99, 0.99 );
         const material = new THREE.MeshMatcapMaterial();
+        
         // const material = new THREE.MeshMatcapMaterial({ map: texture });
         // const material = new THREE.MeshStandardMaterial();
         this.mesh = new THREE.Mesh( geometry, material);
+        // this.mesh.material.transparent = true;
 
         this.mesh.isBomb = false;
         this.mesh.numNeighbors = 0;

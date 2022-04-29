@@ -8,12 +8,11 @@
  */
 import { WebGLRenderer, PerspectiveCamera, Vector3 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { SeedScene } from 'scenes';
-import { Launch } from 'scenes';
+import { FilledScene, Launch } from 'scenes';
 
 // Initialize core ThreeJS components
 //const scene = new Launch();
-const scene = new SeedScene();
+const scene = new FilledScene();
 const camera = new PerspectiveCamera();
 const renderer = new WebGLRenderer({ antialias: true });
 let mouseX;
@@ -47,6 +46,8 @@ window.addEventListener("keydown", cameraMovement, false);
 canvas.addEventListener("mousemove", onMouseMove, false);
 canvas.addEventListener("mousedown", onMouseDown, false);
 canvas.addEventListener("mouseup", onMouseUp, false);
+// canvas.addEventListener("mouseover", onMouseOver, false);
+// canvas.addEventListener("mouseout", onMouseOut, false);
 
 function cameraMovement(event) {
     const keyMap = {
@@ -63,7 +64,7 @@ function cameraMovement(event) {
 
 function onMouseMove(event) {
     if (!scene.gameOver) {
-        scene.checkCube(event, camera);
+        scene.highlightCube(event, camera);
     }
 }
 
@@ -85,6 +86,18 @@ function onMouseUp(event) {
         }
     }
 }
+
+// function onMouseOver(event) {
+//     if (!scene.gameOver) {
+//         scene.highlightCube(event, camera);
+//     }
+// }
+
+// function onMouseOut(event) {
+//     if (!scene.gameOver) {
+//         scene.unHighlightCube(event, camera);
+//     }
+// }
 
 // Render loop
 const onAnimationFrameHandler = (timeStamp) => {

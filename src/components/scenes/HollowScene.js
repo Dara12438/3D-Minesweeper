@@ -1,4 +1,5 @@
 import { Scene, Color} from 'three';
+import { BasicLights } from 'lights';
 import * as THREE from 'three';
 import { HollowGrid } from "../Grids";
 
@@ -22,9 +23,11 @@ class HollowScene extends Scene {
         this.revealMat.push(new THREE.MeshMatcapMaterial({ map: new THREE.TextureLoader().load( 'src/components/images/question.png') }));
         
         // Add meshes to scene
+        const lights = new BasicLights();
+        this.add(lights);
         this.grid = new HollowGrid();
-        for (let i = 0; i < this.grid.cubes.length; i++) {
-            this.add(this.grid.cubes[i].mesh);
+        for (const cubes of this.grid.cubes) {
+            this.add(cubes.mesh);
         }
     }
 
@@ -39,12 +42,28 @@ class HollowScene extends Scene {
         }
     }
 
-    checkCube(event, camera) {
+    highlightCube(event, camera) {
         const cube = this.getNearestCube(event, camera);
-        // console.log("check");
-        // console.log(cube);
-        if (cube != undefined && !cube.reveal) {
-            // console.log(cube.numNeighbors);
+        if (cube != undefined) {
+            for (const cubes of this.grid.cubes) {
+                if (!cubes.mesh.reveal) {
+                    if (cubes.mesh.uuid == cube.uuid) {
+                        cubes.mesh.material = new THREE.MeshStandardMaterial();
+                        cubes.mesh.material.color = new Color(0xf7f914);
+                    }
+                    else {
+                        if (cubes.mesh.flag == 0) {
+                            cubes.mesh.material = new THREE.MeshMatcapMaterial();
+                        }
+                        else if (cubes.mesh.flag == 1) {
+                            cubes.mesh.material = this.revealMat[9];
+                        }
+                        else if (cubes.mesh.flag == 2) {
+                            cubes.mesh.material = this.revealMat[10];
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -58,7 +77,7 @@ class HollowScene extends Scene {
                 this.revealNeighboringCubes(cube);
             }
             else {
-                cube.material = this.revealMat[cube.numNeighbors];;
+                cube.material = this.revealMat[cube.numNeighbors];
             }
         }
         this.checkWin();
@@ -73,10 +92,10 @@ class HollowScene extends Scene {
     }
 
     revealBombs() {
-        for (let i = 0; i < this.grid.bombs.length; i++) {
-            if (!this.grid.bombs[i].reveal) {
-                this.grid.bombs[i].reveal = true;
-                this.grid.bombs[i].material = this.revealMat[0];
+        for (const bombs of this.grid.bombs) {
+            if (!bombs.reveal) {
+                bombs.reveal = true;
+                bombs.material = this.revealMat[0];
             }
         }
     }
@@ -89,7 +108,7 @@ class HollowScene extends Scene {
                 cube.flag = 1;     
             }
             else if (cube.flag == 1) {
-                cube.material = this.revealMat[10];; 
+                cube.material = this.revealMat[10];
                 cube.flag = 2;
             }
             else if (cube.flag == 2) {
@@ -100,8 +119,8 @@ class HollowScene extends Scene {
     }
 
     checkWin() {
-        for (let i = 0; i < this.grid.cubes.length; i++) {
-            if (!this.grid.cubes[i].mesh.isBomb && !this.grid.cubes[i].mesh.reveal) {
+        for (const cubes of this.grid.cubes) {
+            if (!cubes.mesh.isBomb && !cubes.mesh.reveal) {
                 return;
             }
         }
@@ -110,9 +129,9 @@ class HollowScene extends Scene {
     }
 
     revealNeighboringCubes(cube) {
-        for (let i = 0; i < this.grid.cubes.length; i++) {
+        for (const cubes of this.grid.cubes) {
             const pos = cube.position.clone();
-            const curr = this.grid.cubes[i].mesh;
+            const curr = cubes.mesh;
 
             const isNeighbor = !curr.reveal && (curr.position.equals(pos.clone().setX(pos.x - 1)) ||
             curr.position.equals(pos.clone().setX(pos.x - 1).setY(pos.y - 1)) ||
