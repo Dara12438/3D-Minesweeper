@@ -3,8 +3,8 @@ import { BasicLights } from 'lights';
 import * as THREE from 'three';
 import { CubeGrids } from "../Grids";
 
-class HollowScene extends Scene {
-    constructor() {
+class CubeScenes extends Scene {
+    constructor(isFilled) {
         // Call parent Scene() constructor
         super();
 
@@ -14,18 +14,19 @@ class HollowScene extends Scene {
         // Add meshes to scene
         const lights = new BasicLights();
         this.add(lights);
-        this.grid = new CubeGrids(false);
+        this.grid = new CubeGrids(isFilled);
         for (const cubes of this.grid.cubes) {
             this.add(cubes);
         }
     }
 
+    // returns first unrevealed cube that the mouse intersects
     getNearestCube(event, camera) {
         const mouse = new THREE.Vector2((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1);
         const raycaster = new THREE.Raycaster()
         raycaster.setFromCamera(mouse, camera);
 
-        const intersects = raycaster.intersectObjects(this.children, false);
+        const intersects = raycaster.intersectObjects(this.grid.cubes, false);
         if (intersects.length > 0) {
             return intersects[0].object;
         }
@@ -62,4 +63,4 @@ class HollowScene extends Scene {
     }
 }
 
-export default HollowScene;
+export default CubeScenes;

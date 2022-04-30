@@ -8,11 +8,13 @@
  */
 import { WebGLRenderer, PerspectiveCamera, Vector3 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { FilledScene, Launch } from 'scenes';
+import { CubeScenes, Launch } from 'scenes';
 
 // Initialize core ThreeJS components
 //const scene = new Launch();
-const scene = new FilledScene();
+
+// true - FilledScene; false - HollowScene
+const scene = new CubeScenes(false);
 const camera = new PerspectiveCamera();
 const renderer = new WebGLRenderer({ antialias: true });
 let mouseX;
@@ -103,7 +105,7 @@ function onMouseUp(event) {
 const onAnimationFrameHandler = (timeStamp) => {
     controls.update();
     renderer.render(scene, camera);
-    scene.update && scene.update(timeStamp);
+    // scene.update && scene.update(timeStamp);
     window.requestAnimationFrame(onAnimationFrameHandler);
 };
 window.requestAnimationFrame(onAnimationFrameHandler);

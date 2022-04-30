@@ -3,7 +3,7 @@ import { Cube } from 'objects';
 import * as THREE from 'three';
 
 class FilledGrid extends Group {
-    constructor () {
+    constructor() {
         // Call parent Group() constructor
         super();
 
@@ -19,7 +19,7 @@ class FilledGrid extends Group {
                 for (let z = 0; z < this.size; z++) {
                     const cube = new Cube();
                     cube.mesh.position.copy(new THREE.Vector3(x, y, z).subScalar(offset));
-                    this.cubes.push(cube);
+                    this.cubes.push(cube.mesh);
                 }
             }
         }
@@ -30,9 +30,9 @@ class FilledGrid extends Group {
         while (index < this.numBombs) {
             const rand = Math.floor(Math.random() * this.cubes.length);
 
-            if (!this.cubes[rand].mesh.isBomb) {
-                this.cubes[rand].mesh.isBomb = true;
-                this.bombs.push(this.cubes[rand].mesh);
+            if (!this.cubes[rand].isBomb) {
+                this.cubes[rand].isBomb = true;
+                this.bombs.push(this.cubes[rand]);
                 index++;
             }
         }
@@ -40,8 +40,9 @@ class FilledGrid extends Group {
         // determine neighboring bombs
         for (let i = 0; i < this.cubes.length; i++) {
             for (let j = 0; j < this.bombs.length; j++) {
-                const pos = this.cubes[i].mesh.position.clone();
+                const pos = this.cubes[i].position.clone();
                 const curr = this.bombs[j];
+
                 const isNeighbor = curr.position.equals(pos.clone().setX(pos.x - 1)) ||
                 curr.position.equals(pos.clone().setX(pos.x - 1).setY(pos.y - 1)) ||
                 curr.position.equals(pos.clone().setX(pos.x - 1).setY(pos.y - 1).setZ(pos.z - 1)) ||
@@ -70,21 +71,33 @@ class FilledGrid extends Group {
                 curr.position.equals(pos.clone().setZ(pos.z + 1));
 
                 if (isNeighbor) {
-                    this.cubes[i].mesh.numNeighbors++;
+                    this.cubes[i].numNeighbors++;
                 }
             }
         }
     }
 
+    // cubeMeshes() {
+    //     const mesh = [];
+    //     for (const cubes of this.cubes) {
+    //         mesh.push(cubes.mesh);
+    //     }
+    //     return mesh
+    // }
+
     unrevealedCubes() {
         const unrevealed = [];
         for (const cubes of this.cubes) {
-            if (!cubes.mesh.reveal) {
-                unrevealed.push(cubes.mesh);
+            if (!cubes.reveal) {
+                unrevealed.push(cubes);
             }
         }
         return unrevealed
     }
+
+    // removeCube(cube) {
+    //     this.cubes.splice(this.cubes.findIndex(element => element.mesh.uuid == cube.uuid), 1);
+    // }
 }
 
 export default FilledGrid;
