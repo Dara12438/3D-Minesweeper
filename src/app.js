@@ -39,6 +39,9 @@ canvas.style.display = 'block'; // Removes padding below canvas
 document.body.style.margin = 0; // Removes margin around page
 document.body.style.overflow = 'hidden'; // Fix scrolling
 
+
+// Setting up html start website
+let startingParts = [];
 let htmlStyle = '.slidecontainer {width: 100%;}' +
 '.slider {-webkit-appearance: none; appearance: none; width: 100%; height: 25px; background: #d3d3d3; outline: none; opacity: 0.7; -webkit-transition: .2s; transition: opacity .2s;}' +
 '.slider:hover {opacity: 1;}' +
@@ -78,6 +81,7 @@ beginText.innerHTML = '<center><h2>How to Play:</h2></center>' +
 '<p><b>Left Click Cube:</b> Reveal highlighted block</p>' +
 '<p><b>Right Click:</b> Flag highlighted block (right click again to change or remove flag)</p>' +
 '<br><center><h2>Choose Cube\'s Size:</h2></center>';
+startingParts.push(beginText);
 
 // Elements to control input of the mines
 var sliderMines = document.createElement("input");
@@ -100,11 +104,14 @@ function faceResize() {
     faceSize = document.getElementById('minesSlider').value;
     document.getElementById("sizeText").innerHTML = '<center><h2>Cube Size: ' + faceSize + " x " + faceSize + " x " + faceSize + '</h2></center>';
 }
+startingParts.push(sliderMines);
+startingParts.push(sizeOutput);
 
 //Difficulty header
 const diffText = document.createElement("div");
 diffText.innerHTML = '<center><h2>Choose Your Difficulty:</h2>';
 document.body.appendChild(diffText);
+startingParts.push(diffText);
 
 // Difficulty dropdown elements
 const diffDropdown = document.createElement('select');
@@ -129,6 +136,7 @@ diffDropdown.appendChild(option2);
 var diffValue = 0;
 diffDropdown.onchange = diffChange;
 document.body.appendChild(diffDropdown);
+startingParts.push(diffDropdown);
 
 function diffChange () {
     diffValue = document.getElementById("diff").value;
@@ -138,6 +146,7 @@ function diffChange () {
 const cubeText = document.createElement("div");
 cubeText.innerHTML = '<center><h2>Choose Your Playing Field:</h2>';
 document.body.appendChild(cubeText);
+startingParts.push(cubeText);
 
 // Cube dropdown elements
 const cubeDropdown = document.createElement('select');
@@ -158,6 +167,7 @@ cubeDropdown.appendChild(cubeOption1);
 var cubeValue = false;
 cubeDropdown.onchange = cubeChange;
 document.body.appendChild(cubeDropdown);
+startingParts.push(cubeDropdown);
 
 function cubeChange () {
     cubeValue = document.getElementById("cubeSpace").value;
@@ -165,16 +175,29 @@ function cubeChange () {
 }
 
 const button = document.createElement('button');
-//button.innerHTML = "Start the Game!";
 document.body.appendChild(button);
-//button.addEventListener("click", startGame, false);
+startingParts.push(button);
+button.id = "startButton";
+button.style.width = "100%";
+button.innerHTML = "Start the Game!";
+button.addEventListener("click", startGame, false);
 
-
-
-function startGame(event) {
-document.body.innerHTML = "";
-document.body.appendChild(canvas);
+function startGame (event) {
+    setGameUp();
 }
+
+function setGameUp () {
+    startingParts.forEach((startingPart) => startingPart.remove());
+    startingParts = null;
+    page.style.cssText = '';
+    canvas.style.display = 'block'; // Removes padding below canvas
+    document.body.style.margin = 0; // Removes margin around page
+    document.body.style.overflow = 'hidden'; // Fix scrolling
+    document.body.appendChild(canvas);
+
+}
+
+
 
 // Set up controls
 const controls = new OrbitControls(camera, canvas);
