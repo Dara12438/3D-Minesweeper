@@ -39,41 +39,15 @@ let htmlStyle = '.slidecontainer {width: 100%;}' +
 '.slider:hover {opacity: 1;}' +
 '.slider::-webkit-slider-thumb {-webkit-appearance: none; appearance: none;width: 25px; height: 25px; background: #04AA6D; cursor: pointer;}' +
 '.slider::-moz-range-thumb {width: 25px; +height: 25px; background: #04AA6D; cursor: pointer; }';
+let style = document.createElement("style");
+style.innerHTML = htmlStyle;
+document.head.appendChild(style);
+
+let page = document.createElement("BODY");
+page.style.cssText = 'background: #9e9e9e;';
+document.body = page;
 
 let html =
-'<center><h2>How to Play:</h2></center>' +
-'<p>This game takes the classic Minesweeper and moves it to a 3D cube. When you click on a block you can reveal either a number, an empty space, or a bomb. Your goal is to reveal every block without a bomb inside. Numbered blocks will tell you whether there is a bomb anywhere in its vicinity (anywhere in the 3x3 space centered around that cube). However, if you reveal a bomb you lose and the game ends. </p>' +
-'<center><h3>Controls</h3></center>' +
-'<p>Left Click and Drag: Rotate cube</p>' +
-'<p>Left Click Cube: Reveal highlighted block</p>' +
-'<p>Right Click: Flag highlighted block (right click again to change or remove flag)</p>' +
-'<div class="minenumber">' +
-'<center><h2>Choose Cube\'s Size:</h2></center>' +
-'<input type="range" min="5" max="50" value="30" class="slider" id="myRange">'+
-'</div>'+
-'<center><h2>Cube Size: <span id="demo"></span> x <span id="demo2"></span> x <span id="demo3"></span></h2></center>' +
-'<div class="diffSetting">' +
-    '<center><h2>Choose Your Difficulty:</h2>'+
-    '<h2>'+
-    '<input type="radio" id="diff1" name="diff" value="1">'+
-    '<label for="diff1" style="color:green">Easy</label><br>'+
-    '<input type="radio" id="diff2" name="diff" value="2" checked>'+
-    '<label for="diff2" style="color:yellow">Medium</label><br>'+
-    '<input type="radio" id="diff3" name="diff" value="3">'+
-    '<label for="diff3" style="color:red">Hard</label><br>'+
-'</h2>'+
-'</center>'+
-'</div>'+
-'<div class="diffSetting">'+
-'<center><h2>Choose Block Settings:</h2>'+
-'<h2>'+
-'<input type="radio" id="hollow" name="cubeSetting" value="1" checked>'+
-'<label for="diff1">Hollow Cube (only play on cube faces)</label><br>'+
-'<input type="radio" id="diff2" name="cubeSetting" value="2">'+
-'<label for="diff2">Filled Cube (play on the inside of the cube)</label><br>'+
-'</h2>'+
-'</center>'+
-'</div>'+
 '<button onclick="setScene()">Click Here to Begin!</button>'+
 '<script>' +
 'var slider = document.getElementById("myRange");' +
@@ -90,19 +64,112 @@ let html =
 '</script>';
 
 
-let style = document.createElement("style");
-style.innerHTML = htmlStyle;
+let beginText = document.createElement("div");
+document.body.appendChild(beginText);
+beginText.innerHTML = '<center><h2>How to Play:</h2></center>' +
+'<p>This game takes the classic Minesweeper and moves it to a 3D cube. When you click on a block you can reveal either a number, an empty space, or a bomb. Your goal is to reveal every block without a bomb inside. Numbered blocks will tell you whether there is a bomb anywhere in its vicinity (anywhere in the 3x3 space centered around that cube). However, if you reveal a bomb you lose and the game ends. </p>' +
+'<center><h3>Controls</h3></center>' +
+'<p><b>Left Click and Drag:</b> Rotate cube</p>' +
+'<p><b>Left Click Cube:</b> Reveal highlighted block</p>' +
+'<p><b>Right Click:</b> Flag highlighted block (right click again to change or remove flag)</p>' +
+'<br><center><h2>Choose Cube\'s Size:</h2></center>';
 
-let page = document.createElement("BODY");
-page.innerHTML = html;
-page.style.cssText = 'background: #9e9e9e;';
+// Elements to control input of the mines
+var sliderMines = document.createElement("input");
+sliderMines.type = "range";
+sliderMines.min = 5;
+sliderMines.max = 15;
+sliderMines.value = 10;
+sliderMines.className = "slider";
+sliderMines.id = "minesSlider";
+var faceSize = sliderMines.value;
+sliderMines.oninput = faceResize;
+document.body.appendChild(sliderMines);
 
-document.head.appendChild(style);
-document.body = page;
-var slideTest = document.getElementById("slider");
-console.log(slideTest);
+var sizeOutput = document.createElement("div");
+sizeOutput.id = "sizeText";
+sizeOutput.innerHTML = '<center><h2>Cube Size: ' + faceSize + " x " + faceSize + " x " + faceSize + '</h2></center>';
+document.body.appendChild(sizeOutput);
+
+function faceResize() {
+    faceSize = document.getElementById('minesSlider').value;
+    document.getElementById("sizeText").innerHTML = '<center><h2>Cube Size: ' + faceSize + " x " + faceSize + " x " + faceSize + '</h2></center>';
+}
+
+//Difficulty header
+const diffText = document.createElement("div");
+diffText.innerHTML = '<center><h2>Choose Your Difficulty:</h2>';
+document.body.appendChild(diffText);
+
+// Difficulty dropdown elements
+const diffDropdown = document.createElement('select');
+diffDropdown.name = "difficulty";
+diffDropdown.id = "diff";
+diffDropdown.className = "dropdown";
+diffDropdown.style.fontSize = "24px";
+diffDropdown.style.width = "100%";
+
+var option0 = document.createElement('option');
+option0.value = 1;
+option0.text = "Easy";
+diffDropdown.appendChild(option0);
+var option1 = document.createElement('option');
+option1.value = 2;
+option1.text = "Medium";
+diffDropdown.appendChild(option1);
+var option2 = document.createElement('option');
+option2.value = 3;
+option2.text = "Hard";
+diffDropdown.appendChild(option2);
+var diffValue = 0;
+diffDropdown.onchange = diffChange;
+document.body.appendChild(diffDropdown);
+
+function diffChange () {
+    diffValue = document.getElementById("diff").value;
+}
+
+//Cube header
+const cubeText = document.createElement("div");
+cubeText.innerHTML = '<center><h2>Choose Your Playing Field:</h2>';
+document.body.appendChild(cubeText);
+
+// Cube dropdown elements
+const cubeDropdown = document.createElement('select');
+cubeDropdown.name = "cubeField";
+cubeDropdown.id = "cubeSpace";
+cubeDropdown.className = "dropdown";
+cubeDropdown.style.fontSize = "24px";
+cubeDropdown.style.width = "100%";
+
+var cubeOption0 = document.createElement('option');
+cubeOption0.value = false;
+cubeOption0.text = "Hollow Cube";
+cubeDropdown.appendChild(cubeOption0);
+var cubeOption1 = document.createElement('option');
+cubeOption1.value = true;
+cubeOption1.text = "Filled Cube";
+cubeDropdown.appendChild(cubeOption1);
+var cubeValue = false;
+cubeDropdown.onchange = cubeChange;
+document.body.appendChild(cubeDropdown);
+
+function cubeChange () {
+    cubeValue = document.getElementById("cubeSpace").value;
+    
+}
+
+const button = document.createElement('button');
+//button.innerHTML = "Start the Game!";
+document.body.appendChild(button);
+//button.addEventListener("click", startGame, false);
+
+
+
+function startGame(event) {
+document.body.innerHTML = "";
 document.body.appendChild(canvas);
-
+}
 
 // Set up controls
 const controls = new OrbitControls(camera, canvas);
