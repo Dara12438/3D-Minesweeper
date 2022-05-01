@@ -3,14 +3,14 @@ import { Cube } from 'objects';
 import * as THREE from 'three';
 
 class CubeGrids extends Group {
-    constructor(isFilled) {
+    constructor(isFilled, difficulty, size) {
         // Call parent Group() constructor
         super();
 
         this.name = 'cubeGrids';
         this.gridType = isFilled;
-        this.numBombs = 20;
-        this.size = 10;
+        this.size = size;
+        this.numBombs;
         this.unMarkedBombs = this.numBombs;
         this.cubes = [];
         const offset = this.size/2;
@@ -38,6 +38,9 @@ class CubeGrids extends Group {
                 }
             }
         }
+
+        this.numBombs = (!isFilled && ((difficulty == 1) * (Math.floor(this.cubes.length * 0.10)) || (difficulty == 2) * (Math.floor(this.cubes.length * 0.15)) || (difficulty == 3) * (Math.floor(this.cubes.length * 0.20)))) ||
+                        ( isFilled && ((difficulty == 1) * (Math.floor(this.cubes.length * 0.06)) || (difficulty == 2) * (Math.floor(this.cubes.length * 0.10)) || (difficulty == 3) * (Math.floor(this.cubes.length * 0.15)))) || 1;
         
         // create bombs
         this.bombs = [];

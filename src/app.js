@@ -1,4 +1,4 @@
-/**
+/*
  * app.js
  *
  * This is the first file loaded. It sets up the Renderer,
@@ -6,15 +6,20 @@
  * handles window resizes.
  *
  */
-import { WebGLRenderer, PerspectiveCamera, Vector3, Box2 } from 'three';
+import { WebGLRenderer, PerspectiveCamera, Vector3, Box2, Audio, AudioListener, AudioLoader } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { CubeScenes, Launch } from 'scenes';
+
+// import easyAudio from "src/components/audio/easy.mp3";
+// import mediumAudio from "src/components/audio/medium.mp3";
+// import hardAudio from "src/components/audio/hard.mp3";
 
 // Initialize core ThreeJS components
 //const scene = new Launch();
 
-// true - FilledScene; false - HollowScene
-const scene = new CubeScenes(true);
+// true - FilledScene; false - HollowScene\
+const size = 20
+const scene = new CubeScenes(false, 1, size);
 const camera = new PerspectiveCamera();
 const renderer = new WebGLRenderer({ antialias: true });
 let mouseX;
@@ -109,7 +114,7 @@ const controls = new OrbitControls(camera, canvas);
 controls.enableDamping = true;
 controls.enablePan = false;
 controls.minDistance = 4;
-controls.maxDistance = 25;
+controls.maxDistance = size + 15;
 controls.update();
 
 
@@ -189,3 +194,28 @@ const windowResizeHandler = () => {
 };
 windowResizeHandler();
 window.addEventListener('resize', windowResizeHandler, false);
+
+// add audio
+function uploadAudio() {
+    var audioListener = new AudioListener();
+    camera.add(audioListener);
+    var sound = new Audio(audioListener);
+    var audioLoader = new AudioLoader();
+
+    let audioChoice = mediumAudio;
+    if (level == easy) {
+        audioChoice = easyAudio;
+    }
+    else if (level == hard) {
+        audioChoice = hardAudio;
+    }
+
+    audioLoader.load(audioChoice, function (buffer) {
+        sound.setBuffer(buffer);
+        sound.setLoop(true);
+        sound.setVolume(0.5);
+        sound.play();
+
+    });
+}
+
