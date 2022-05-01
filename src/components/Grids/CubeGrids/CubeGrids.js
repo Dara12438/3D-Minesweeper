@@ -11,6 +11,7 @@ class CubeGrids extends Group {
         this.gridType = isFilled;
         this.numBombs = 20;
         this.size = 10;
+        this.unMarkedBombs = this.numBombs;
         this.cubes = [];
         const offset = this.size/2;
 
@@ -103,20 +104,21 @@ class CubeGrids extends Group {
     }
 
     flag(cube) {
-        if (cube != undefined && !cube.reveal) {
-            if (cube.flag == 0) {
-                cube.material = this.revealMat[27];
-                cube.flag = 1;     
-            }
-            else if (cube.flag == 1) {
-                cube.material = this.revealMat[28];
-                cube.flag = 2;
-            }
-            else if (cube.flag == 2) {
-                cube.material = new THREE.MeshMatcapMaterial(); 
-                cube.flag = 0;
-            }
+        if (cube.flag == 0) {
+            cube.material = this.revealMat[27];
+            cube.flag = 1;
+            this.unMarkedBombs--;     
         }
+        else if (cube.flag == 1) {
+            cube.material = this.revealMat[28];
+            cube.flag = 2;
+            this.unMarkedBombs++;
+        }
+        else if (cube.flag == 2) {
+            cube.material = new THREE.MeshMatcapMaterial(); 
+            cube.flag = 0;
+        }
+        console.log(this.grid.unMarkedBombs+" bombs left");
     }
 
     highlight(cube, cubes) {
@@ -169,6 +171,11 @@ class CubeGrids extends Group {
 
     revealCubes(cube, parent) {
         cube.reveal = true;
+        if (cube.flag == 1) {
+            this.unMarkedBombs++;
+            console.log(this.grid.unMarkedBombs+" bombs left");
+        }
+
         if (cube.numNeighbors == 0) {
             const revealMat = new THREE.MeshMatcapMaterial({ color: 0x9e9e9e });
             cube.material = revealMat;
@@ -178,7 +185,7 @@ class CubeGrids extends Group {
             cube.material = this.revealMat[cube.numNeighbors];
             if (this.gridType) {
                 cube.material.transparent = true;
-                cube.material.opacity = 0.75;
+                cube.material.opacity = 0.6;
             }
         }
     }

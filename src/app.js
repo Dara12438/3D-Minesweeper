@@ -14,7 +14,7 @@ import { CubeScenes, Launch } from 'scenes';
 //const scene = new Launch();
 
 // true - FilledScene; false - HollowScene
-const scene = new CubeScenes(false);
+const scene = new CubeScenes(true);
 const camera = new PerspectiveCamera();
 const renderer = new WebGLRenderer({ antialias: true });
 let mouseX;

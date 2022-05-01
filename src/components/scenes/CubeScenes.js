@@ -43,7 +43,7 @@ class CubeScenes extends Scene {
     // reveals clicked cube
     revealCube(event, camera) {
         const cube = this.getNearestCube(event, camera);
-        if (cube != undefined && !cube.isBomb && !cube.reveal) {
+        if (cube != undefined && !cube.isBomb) {
             // reveals cluster of blank cubes 
             this.grid.revealCubes(cube, this);
             this.grid.removeRevealedCubes();
@@ -59,7 +59,9 @@ class CubeScenes extends Scene {
     // places markers on unrevealed cubes
     flagCube(event, camera) {
         const cube = this.getNearestCube(event, camera);
-        this.grid.flag(cube);
+        if (cube != undefined) {
+            this.grid.flag(cube);
+        }
     }
 }
 
