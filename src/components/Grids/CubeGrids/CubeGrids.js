@@ -41,8 +41,8 @@ class CubeGrids extends Group {
             }
         }
 
-        this.numBombs = (!isFilled && ((difficulty == 1) * (Math.floor(this.cubes.length * 0.10)) || (difficulty == 2) * (Math.floor(this.cubes.length * 0.15)) || (difficulty == 3) * (Math.floor(this.cubes.length * 0.20)))) ||
-                        ( isFilled && ((difficulty == 1) * (Math.floor(this.cubes.length * 0.06)) || (difficulty == 2) * (Math.floor(this.cubes.length * 0.10)) || (difficulty == 3) * (Math.floor(this.cubes.length * 0.15)))) || 1;
+        this.numBombs = (!isFilled && ((difficulty == 1) * (Math.floor(this.cubes.length * 0.08)) || (difficulty == 2) * (Math.floor(this.cubes.length * 0.12)) || (difficulty == 3) * (Math.floor(this.cubes.length * 0.14)))) ||
+                        ( isFilled && ((difficulty == 1) * (Math.floor(this.cubes.length * 0.06)) || (difficulty == 2) * (Math.floor(this.cubes.length * 0.10)) || (difficulty == 3) * (Math.floor(this.cubes.length * 0.12)))) || 1;
         this.unMarkedBombs = this.numBombs;
 
         // create bombs
@@ -104,7 +104,7 @@ class CubeGrids extends Group {
                 return false;
             }
         }
-        console.log("You Win!");
+        // console.log("You Win!");
         this.removeAllCubes();
         return true;
     }
@@ -124,7 +124,7 @@ class CubeGrids extends Group {
             cube.material = new THREE.MeshMatcapMaterial(); 
             cube.flag = 0;
         }
-        console.log(this.unMarkedBombs+" bombs left");
+        // console.log(this.unMarkedBombs+" bombs left");
     }
 
     // highlights cube on the mouse and removes the highlights of other cubes
@@ -173,14 +173,14 @@ class CubeGrids extends Group {
         }
         this.removeRevealedCubes();
         this.removeAllCubes();
-        console.log("You hit a bomb!");
+        // console.log("You hit a bomb!");
     }
 
     revealCubes(cube, parent) {
         cube.reveal = true;
         if (cube.flag == 1) {
             this.unMarkedBombs++;
-            console.log(this.unMarkedBombs+" bombs left");
+            // console.log(this.unMarkedBombs+" bombs left");
         }
 
         if (cube.numNeighbors == 0) {
@@ -192,7 +192,7 @@ class CubeGrids extends Group {
             cube.material = this.revealMat[cube.numNeighbors];
             if (this.gridType) {
                 cube.material.transparent = true;
-                cube.material.opacity = 0.6;
+                cube.material.opacity = 0.6 - 0.035 * (this.size - 5);
             }
         }
     }
@@ -236,19 +236,6 @@ class CubeGrids extends Group {
             }
         }
     }
-
-    // uploadAudio() {
-    //     var audioListener = new THREE.AudioListener();
-    //     var sound = new THREE.Audio(audioListener);
-    //     var audioLoader = new THREE.AudioLoader();
-    
-    //     audioLoader.load(sound1, function (buffer) {
-    //         sound.setBuffer(buffer);
-    //         sound.setLoop(false);
-    //         sound.setVolume(0.1);
-    //         sound.play();
-    //     });
-    // }
 }
 
 export default CubeGrids;

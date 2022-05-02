@@ -1,19 +1,21 @@
 {
   "name": "3d-minesweeper",
   "repository": "https://github.com/Dara12438/Final-Project",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "title": "3D Minesweeper",
-  "description": "SHORT DESCRIPTION OF PROJECT HERE. ONE TO TWO SENTENCES MAX",
+  "description": "This game takes the classic Minesweeper and moves it to a 3D cube. ",
   "keywords": [
     "Princeton",
     "graphics",
     "three.js",
     "COS 426",
     "ivy league",
-    "keyword1",
-    "keyword2",
-    "...",
-    "this last entry CANNOT have a comma after it ->"
+    "3D",
+    "Minesweeper",
+    "game",
+    "cubes",
+    "blocks",
+    "music"
   ],
   "scripts": {
     "start": "webpack-dev-server --mode development --output-public-path \"\"",

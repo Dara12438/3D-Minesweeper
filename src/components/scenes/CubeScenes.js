@@ -44,8 +44,9 @@ class CubeScenes extends Scene {
     }
 
     displayBombsLeft() {
-        if (this.divElements == 1) {
+        if (this.divElements.length == 1) {
             this.divElements.forEach((startingPart) => startingPart.remove());
+            this.divElements = [];
         }
         
         const text = "Bombs Left: ";
@@ -101,7 +102,6 @@ class CubeScenes extends Scene {
         if (this.gameOver) {
             const message = this.createText(this.gameOverText, '20%', '10px', '40px');
             message.style.left = (window.innerWidth - message.clientWidth) / 2 + 'px';
-            // console.log(message);
             if (this.gameOverText == "You Win!") {
                 message.style.color = 'green';
             }
