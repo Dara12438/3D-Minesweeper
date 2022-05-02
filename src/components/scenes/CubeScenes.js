@@ -4,7 +4,7 @@ import { BasicLights } from 'lights';
 import { CubeGrids } from "../Grids";
 
 class CubeScenes extends Scene {
-    constructor(isFilled, difficulty, size) {
+    constructor(isFilled, difficulty, size, images) {
         // Call parent Scene() constructor
         super();
 
@@ -15,7 +15,7 @@ class CubeScenes extends Scene {
         // Add meshes to scene
         const lights = new BasicLights();
         this.add(lights);
-        this.grid = new CubeGrids(isFilled, difficulty, size);
+        this.grid = new CubeGrids(isFilled, difficulty, size, images);
         for (const cubes of this.grid.cubes) {
             this.add(cubes);
         }

@@ -10,6 +10,7 @@ import { WebGLRenderer, PerspectiveCamera, Vector3, Audio, AudioListener, AudioL
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { CubeScenes } from 'scenes';
 
+// audio
 import easyAudio from "../src/components/audio/easy.mp3";
 import mediumAudio from "../src/components/audio/medium.mp3";
 import hardAudio from "../src/components/audio/hard.mp3";
@@ -17,11 +18,43 @@ import reveal from "../src/components/audio/reveal.mp3";
 import win from "../src/components/audio/victory.mp3";
 import lose from "../src/components/audio/bomb.mp3";
 
+// images
+import img1 from '../src/components/images/1.png';
+import img2 from '../src/components/images/2.png';
+import img3 from '../src/components/images/3.png';
+import img4 from '../src/components/images/4.png';
+import img5 from '../src/components/images/5.png';
+import img6 from '../src/components/images/6.png';
+import img7 from '../src/components/images/7.png';
+import img8 from '../src/components/images/8.png';
+import img9 from '../src/components/images/9.png';
+import img10 from '../src/components/images/10.png';
+import img11 from '../src/components/images/11.png';
+import img12 from '../src/components/images/12.png';
+import img13 from '../src/components/images/13.png';
+import img14 from '../src/components/images/14.png';
+import img15 from '../src/components/images/15.png';
+import img16 from '../src/components/images/16.png';
+import img17 from '../src/components/images/17.png';
+import img18 from '../src/components/images/18.png';
+import img19 from '../src/components/images/19.png';
+import img20 from '../src/components/images/20.png';
+import img21 from '../src/components/images/21.png';
+import img22 from '../src/components/images/22.png';
+import img23 from '../src/components/images/23.png';
+import img24 from '../src/components/images/24.png';
+import img25 from '../src/components/images/25.png';
+import img26 from '../src/components/images/26.png';
+import bombPic from '../src/components/images/bomb.png';
+import exclaimPic from '../src/components/images/exclaim.png';
+import questionPic from '../src/components/images/question.png';
+const images = [bombPic, img1, img2, img3, img4, img5, img6, img7, img8, img9, img10, img11, img12, img13, img14, img15, img16, img17, img18, img19, img20, img21, img22, img23, img24, img25, img26, exclaimPic, questionPic];
+
 // Initialize core ThreeJS components
 //const scene = new Launch();
 
 // true - FilledScene; false - HollowScene
-let scene = new CubeScenes(false, 1, 2);
+let scene = new CubeScenes(false, 1, 2, images);
 const camera = new PerspectiveCamera();
 const renderer = new WebGLRenderer({ antialias: true });
 let mouseX;
@@ -77,7 +110,7 @@ let html =
 let beginText = document.createElement("div");
 document.body.appendChild(beginText);
 beginText.innerHTML = '<center><h2>How to Play:</h2></center>' +
-'<p>This game takes the classic Minesweeper and moves it to a 3D cube. When you click on a block you can reveal either a number, an empty space, or a bomb. Your goal is to reveal every block without a bomb inside. Numbered blocks will tell you whether there is a bomb anywhere in its vicinity (anywhere in the 3x3 space centered around that cube). However, if you reveal a bomb you lose and the game ends. </p>' +
+'<p>This game takes the classic Minesweeper and moves it to a 3D cube. When you click on a block you can reveal either a number, an empty space, or a bomb. Your goal is to reveal every block without a bomb inside. Numbered blocks will tell you whether there is a bomb anywhere in its vicinity (anywhere in the 3x3 space centered around that cube). However, if you reveal a bomb you lose and the game ends. If you wish to play again, just refresh the page to be taken back here. </p>' +
 '<center><h3>Controls</h3></center>' +
 '<p><b>Scroll Wheel:</b> Zoom in/out on cube</p>' +
 '<p><b>Left Click and Drag:</b> Rotate cube</p>' +
@@ -196,15 +229,10 @@ function setGameUp () {
     document.body.style.margin = 0; // Removes margin around page
     document.body.style.overflow = 'hidden'; // Fix scrolling
 
-    scene = new CubeScenes(cubeValue, diffValue, faceSize);
+    scene = new CubeScenes(cubeValue, diffValue, faceSize, images);
     camera.position.set(faceSize, faceSize, -faceSize);
     document.body.appendChild(canvas);
     uploadAudio();
-
-    // let displayBombsLeft = document.createElement("div");
-    // document.body.appendChild(displayBombsLeft);
-    // displayBombsLeft.innerHTML = 
-    // '<p><b>Bombs left:</b>'+scene.bombsLeft()+'</p>';
 }
 
 // Set up camera

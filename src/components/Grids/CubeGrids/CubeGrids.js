@@ -2,9 +2,8 @@ import { Group } from 'three';
 import { Cube } from 'objects';
 import * as THREE from 'three';
 
-
 class CubeGrids extends Group {
-    constructor(isFilled, difficulty, size) {
+    constructor(isFilled, difficulty, size, images) {
         // Call parent Group() constructor
         super();
 
@@ -19,14 +18,10 @@ class CubeGrids extends Group {
 
         // cube textures
         this.revealMat = [];
-        var revealTex = new THREE.TextureLoader().load( 'src/components/images/bomb.png');
-        this.revealMat.push(new THREE.MeshMatcapMaterial({ map: revealTex }));
-        for (let i = 1; i < 27; i++) {
-            revealTex = new THREE.TextureLoader().load( 'src/components/images/'+i+'.png');
+        for (let i = 0; i < images.length; i++) {
+            const revealTex = new THREE.TextureLoader().load(images[i]);
             this.revealMat.push(new THREE.MeshMatcapMaterial({ map: revealTex }));
         }
-        this.revealMat.push(new THREE.MeshMatcapMaterial({ map: new THREE.TextureLoader().load( 'src/components/images/exclaim.png') }));
-        this.revealMat.push(new THREE.MeshMatcapMaterial({ map: new THREE.TextureLoader().load( 'src/components/images/question.png') }));
 
         // create cubes
         for (let x = 0; x < this.size; x++) {

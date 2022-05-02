@@ -23,14 +23,14 @@ class SeedScene extends Scene {
         this.background = new Color(0x7ec0ee);
 
         this.revealMat = [];
-        var revealTex = new THREE.TextureLoader().load( 'src/components/images/bomb.png');
+        var revealTex = new THREE.TextureLoader().load( '../src/components/images/bomb.png');
         this.revealMat.push(new THREE.MeshMatcapMaterial({ map: revealTex }));
         for (let i = 1; i < 9; i++) {
-            revealTex = new THREE.TextureLoader().load( 'src/components/images/'+i+'.png');
+            revealTex = new THREE.TextureLoader().load( '../src/components/images/'+i+'.png');
             this.revealMat.push(new THREE.MeshMatcapMaterial({ map: revealTex }));
         }
-        this.revealMat.push(new THREE.MeshMatcapMaterial({ map: new THREE.TextureLoader().load( 'src/components/images/exclaim.png') }));
-        this.revealMat.push(new THREE.MeshMatcapMaterial({ map: new THREE.TextureLoader().load( 'src/components/images/question.png') }));
+        this.revealMat.push(new THREE.MeshMatcapMaterial({ map: new THREE.TextureLoader().load( '../src/components/images/exclaim.png') }));
+        this.revealMat.push(new THREE.MeshMatcapMaterial({ map: new THREE.TextureLoader().load( '../src/components/images/question.png') }));
         // Add meshes to scene
         // const land = new Land();
         // const grid = new Grid();
