@@ -4,7 +4,7 @@ import MODEL from './cube.gltf';
 import * as THREE from 'three';
 
 class Cube extends Group {
-    constructor() {
+    constructor(isFilled) {
         // Call parent Group() constructor
         super();
 
@@ -21,7 +21,11 @@ class Cube extends Group {
 
         // const geometry = new THREE.BoxGeometry( 0.95, 0.95, 0.95 );
         // const geometry = new THREE.BoxGeometry( 0.5, 0.5, .5 );
-        const geometry = new THREE.BoxGeometry(0.995, 0.995, 0.995);
+        
+        let geometry = new THREE.BoxGeometry(0.995, 0.995, 0.995);
+        if (isFilled) {
+            geometry = new THREE.BoxGeometry( 0.9, 0.9, 0.9 );
+        }
         const material = new THREE.MeshMatcapMaterial();
         
         // const material = new THREE.MeshMatcapMaterial({ map: texture });

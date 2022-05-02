@@ -2,6 +2,7 @@ import { Group } from 'three';
 import { Cube } from 'objects';
 import * as THREE from 'three';
 
+
 class CubeGrids extends Group {
     constructor(isFilled, difficulty, size) {
         // Call parent Group() constructor
@@ -11,9 +12,10 @@ class CubeGrids extends Group {
         this.gridType = isFilled;
         this.size = size;
         this.numBombs;
-        this.unMarkedBombs = this.numBombs;
+        this.unMarkedBombs;
         this.cubes = [];
         const offset = this.size/2;
+        
 
         // cube textures
         this.revealMat = [];
@@ -31,7 +33,7 @@ class CubeGrids extends Group {
             for (let y = 0; y < this.size; y++) {
                 for (let z = 0; z < this.size; z++) {
                     if (isFilled || (x == 0 || x == this.size - 1 || y == 0 || y == this.size - 1 || z == 0 || z == this.size - 1)) {
-                        const cube = new Cube();
+                        const cube = new Cube(isFilled);
                         cube.mesh.position.copy(new THREE.Vector3(x, y, z).subScalar(offset));
                         this.cubes.push(cube.mesh);
                     }
@@ -41,7 +43,8 @@ class CubeGrids extends Group {
 
         this.numBombs = (!isFilled && ((difficulty == 1) * (Math.floor(this.cubes.length * 0.10)) || (difficulty == 2) * (Math.floor(this.cubes.length * 0.15)) || (difficulty == 3) * (Math.floor(this.cubes.length * 0.20)))) ||
                         ( isFilled && ((difficulty == 1) * (Math.floor(this.cubes.length * 0.06)) || (difficulty == 2) * (Math.floor(this.cubes.length * 0.10)) || (difficulty == 3) * (Math.floor(this.cubes.length * 0.15)))) || 1;
-        
+        this.unMarkedBombs = this.numBombs;
+
         // create bombs
         this.bombs = [];
         let index = 0;
@@ -121,9 +124,10 @@ class CubeGrids extends Group {
             cube.material = new THREE.MeshMatcapMaterial(); 
             cube.flag = 0;
         }
-        console.log(this.grid.unMarkedBombs+" bombs left");
+        console.log(this.unMarkedBombs+" bombs left");
     }
 
+    // highlights cube on the mouse and removes the highlights of other cubes
     highlight(cube, cubes) {
         if (cube != undefined && cubes.uuid == cube.uuid) {
             cubes.material = new THREE.MeshStandardMaterial();
@@ -176,7 +180,7 @@ class CubeGrids extends Group {
         cube.reveal = true;
         if (cube.flag == 1) {
             this.unMarkedBombs++;
-            console.log(this.grid.unMarkedBombs+" bombs left");
+            console.log(this.unMarkedBombs+" bombs left");
         }
 
         if (cube.numNeighbors == 0) {
@@ -232,6 +236,19 @@ class CubeGrids extends Group {
             }
         }
     }
+
+    // uploadAudio() {
+    //     var audioListener = new THREE.AudioListener();
+    //     var sound = new THREE.Audio(audioListener);
+    //     var audioLoader = new THREE.AudioLoader();
+    
+    //     audioLoader.load(sound1, function (buffer) {
+    //         sound.setBuffer(buffer);
+    //         sound.setLoop(false);
+    //         sound.setVolume(0.1);
+    //         sound.play();
+    //     });
+    // }
 }
 
 export default CubeGrids;
