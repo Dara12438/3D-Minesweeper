@@ -1,6 +1,6 @@
 import { Scene, Color, Vector2, Raycaster } from 'three';
 import { BasicLights } from 'lights';
-import { CubeGrids } from "../Grids";
+import { CubeGrids } from "../grids";
 
 class CubeScenes extends Scene {
     constructor(isFilled, difficulty, size, images) {
