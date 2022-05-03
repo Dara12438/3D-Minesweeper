@@ -1,6 +1,6 @@
 {
   "name": "3d-minesweeper",
-  "repository": "https://github.com/Dara12438/Final-Project",
+  "repository": "Final-Project",
   "version": "1.0.0",
   "title": "3D Minesweeper",
   "description": "This game takes the classic Minesweeper and moves it to a 3D cube. ",
