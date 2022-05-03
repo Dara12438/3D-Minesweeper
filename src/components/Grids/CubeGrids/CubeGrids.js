@@ -1,4 +1,10 @@
-import { Group, TextureLoader, MeshMatcapMaterial, MeshStandardMaterial, Vector3 } from 'three';
+import {
+    Group,
+    TextureLoader,
+    MeshMatcapMaterial,
+    MeshStandardMaterial,
+    Vector3,
+} from 'three';
 import { Cube } from 'objects';
 
 class CubeGrids extends Group {
@@ -12,8 +18,7 @@ class CubeGrids extends Group {
         this.numBombs;
         this.unMarkedBombs;
         this.cubes = [];
-        const offset = this.size/2;
-        
+        const offset = this.size / 2;
 
         // cube textures
         this.revealMat = [];
@@ -26,17 +31,36 @@ class CubeGrids extends Group {
         for (let x = 0; x < this.size; x++) {
             for (let y = 0; y < this.size; y++) {
                 for (let z = 0; z < this.size; z++) {
-                    if (isFilled || (x == 0 || x == this.size - 1 || y == 0 || y == this.size - 1 || z == 0 || z == this.size - 1)) {
+                    if (
+                        isFilled ||
+                        x == 0 ||
+                        x == this.size - 1 ||
+                        y == 0 ||
+                        y == this.size - 1 ||
+                        z == 0 ||
+                        z == this.size - 1
+                    ) {
                         const cube = new Cube(isFilled);
-                        cube.mesh.position.copy(new Vector3(x, y, z).subScalar(offset));
+                        cube.mesh.position.copy(
+                            new Vector3(x, y, z).subScalar(offset)
+                        );
                         this.cubes.push(cube.mesh);
                     }
                 }
             }
         }
 
-        this.numBombs = (!isFilled && ((difficulty == 1) * (Math.floor(this.cubes.length * 0.08)) || (difficulty == 2) * (Math.floor(this.cubes.length * 0.14)) || (difficulty == 3) * (Math.floor(this.cubes.length * 0.20)))) ||
-                        ( isFilled && ((difficulty == 1) * (Math.floor(this.cubes.length * 0.06)) || (difficulty == 2) * (Math.floor(this.cubes.length * 0.10)) || (difficulty == 3) * (Math.floor(this.cubes.length * 0.14)))) || 1;
+        this.numBombs =
+            (!isFilled &&
+                ((difficulty == 1) * Math.floor(this.cubes.length * 0.08) ||
+                    (difficulty == 2) * Math.floor(this.cubes.length * 0.14) ||
+                    (difficulty == 3) * Math.floor(this.cubes.length * 0.2))) ||
+            (isFilled &&
+                ((difficulty == 1) * Math.floor(this.cubes.length * 0.06) ||
+                    (difficulty == 2) * Math.floor(this.cubes.length * 0.1) ||
+                    (difficulty == 3) *
+                        Math.floor(this.cubes.length * 0.14))) ||
+            1;
         this.unMarkedBombs = this.numBombs;
 
         // create bombs
@@ -58,32 +82,141 @@ class CubeGrids extends Group {
                 const pos = this.cubes[i].position.clone();
                 const curr = this.bombs[j];
 
-                const isNeighbor = curr.position.equals(pos.clone().setX(pos.x - 1)) ||
-                curr.position.equals(pos.clone().setX(pos.x - 1).setY(pos.y - 1)) ||
-                curr.position.equals(pos.clone().setX(pos.x - 1).setY(pos.y - 1).setZ(pos.z - 1)) ||
-                curr.position.equals(pos.clone().setX(pos.x - 1).setY(pos.y - 1).setZ(pos.z + 1)) ||
-                curr.position.equals(pos.clone().setX(pos.x - 1).setY(pos.y + 1)) ||
-                curr.position.equals(pos.clone().setX(pos.x - 1).setY(pos.y + 1).setZ(pos.z - 1)) ||
-                curr.position.equals(pos.clone().setX(pos.x - 1).setY(pos.y + 1).setZ(pos.z + 1)) ||
-                curr.position.equals(pos.clone().setX(pos.x - 1).setZ(pos.z - 1)) ||
-                curr.position.equals(pos.clone().setX(pos.x - 1).setZ(pos.z + 1)) ||
-                curr.position.equals(pos.clone().setX(pos.x + 1)) ||
-                curr.position.equals(pos.clone().setX(pos.x + 1).setY(pos.y - 1)) ||
-                curr.position.equals(pos.clone().setX(pos.x + 1).setY(pos.y - 1).setZ(pos.z - 1)) ||
-                curr.position.equals(pos.clone().setX(pos.x + 1).setY(pos.y - 1).setZ(pos.z + 1)) ||
-                curr.position.equals(pos.clone().setX(pos.x + 1).setY(pos.y + 1)) ||
-                curr.position.equals(pos.clone().setX(pos.x + 1).setY(pos.y + 1).setZ(pos.z - 1)) ||
-                curr.position.equals(pos.clone().setX(pos.x + 1).setY(pos.y + 1).setZ(pos.z + 1)) ||
-                curr.position.equals(pos.clone().setX(pos.x + 1).setZ(pos.z - 1)) ||
-                curr.position.equals(pos.clone().setX(pos.x + 1).setZ(pos.z + 1)) ||
-                curr.position.equals(pos.clone().setY(pos.y - 1)) ||
-                curr.position.equals(pos.clone().setY(pos.y - 1).setZ(pos.z - 1)) ||
-                curr.position.equals(pos.clone().setY(pos.y - 1).setZ(pos.z + 1)) ||
-                curr.position.equals(pos.clone().setY(pos.y + 1)) ||
-                curr.position.equals(pos.clone().setY(pos.y + 1).setZ(pos.z - 1)) ||
-                curr.position.equals(pos.clone().setY(pos.y + 1).setZ(pos.z + 1)) ||
-                curr.position.equals(pos.clone().setZ(pos.z - 1)) ||
-                curr.position.equals(pos.clone().setZ(pos.z + 1));
+                const isNeighbor =
+                    curr.position.equals(pos.clone().setX(pos.x - 1)) ||
+                    curr.position.equals(
+                        pos
+                            .clone()
+                            .setX(pos.x - 1)
+                            .setY(pos.y - 1)
+                    ) ||
+                    curr.position.equals(
+                        pos
+                            .clone()
+                            .setX(pos.x - 1)
+                            .setY(pos.y - 1)
+                            .setZ(pos.z - 1)
+                    ) ||
+                    curr.position.equals(
+                        pos
+                            .clone()
+                            .setX(pos.x - 1)
+                            .setY(pos.y - 1)
+                            .setZ(pos.z + 1)
+                    ) ||
+                    curr.position.equals(
+                        pos
+                            .clone()
+                            .setX(pos.x - 1)
+                            .setY(pos.y + 1)
+                    ) ||
+                    curr.position.equals(
+                        pos
+                            .clone()
+                            .setX(pos.x - 1)
+                            .setY(pos.y + 1)
+                            .setZ(pos.z - 1)
+                    ) ||
+                    curr.position.equals(
+                        pos
+                            .clone()
+                            .setX(pos.x - 1)
+                            .setY(pos.y + 1)
+                            .setZ(pos.z + 1)
+                    ) ||
+                    curr.position.equals(
+                        pos
+                            .clone()
+                            .setX(pos.x - 1)
+                            .setZ(pos.z - 1)
+                    ) ||
+                    curr.position.equals(
+                        pos
+                            .clone()
+                            .setX(pos.x - 1)
+                            .setZ(pos.z + 1)
+                    ) ||
+                    curr.position.equals(pos.clone().setX(pos.x + 1)) ||
+                    curr.position.equals(
+                        pos
+                            .clone()
+                            .setX(pos.x + 1)
+                            .setY(pos.y - 1)
+                    ) ||
+                    curr.position.equals(
+                        pos
+                            .clone()
+                            .setX(pos.x + 1)
+                            .setY(pos.y - 1)
+                            .setZ(pos.z - 1)
+                    ) ||
+                    curr.position.equals(
+                        pos
+                            .clone()
+                            .setX(pos.x + 1)
+                            .setY(pos.y - 1)
+                            .setZ(pos.z + 1)
+                    ) ||
+                    curr.position.equals(
+                        pos
+                            .clone()
+                            .setX(pos.x + 1)
+                            .setY(pos.y + 1)
+                    ) ||
+                    curr.position.equals(
+                        pos
+                            .clone()
+                            .setX(pos.x + 1)
+                            .setY(pos.y + 1)
+                            .setZ(pos.z - 1)
+                    ) ||
+                    curr.position.equals(
+                        pos
+                            .clone()
+                            .setX(pos.x + 1)
+                            .setY(pos.y + 1)
+                            .setZ(pos.z + 1)
+                    ) ||
+                    curr.position.equals(
+                        pos
+                            .clone()
+                            .setX(pos.x + 1)
+                            .setZ(pos.z - 1)
+                    ) ||
+                    curr.position.equals(
+                        pos
+                            .clone()
+                            .setX(pos.x + 1)
+                            .setZ(pos.z + 1)
+                    ) ||
+                    curr.position.equals(pos.clone().setY(pos.y - 1)) ||
+                    curr.position.equals(
+                        pos
+                            .clone()
+                            .setY(pos.y - 1)
+                            .setZ(pos.z - 1)
+                    ) ||
+                    curr.position.equals(
+                        pos
+                            .clone()
+                            .setY(pos.y - 1)
+                            .setZ(pos.z + 1)
+                    ) ||
+                    curr.position.equals(pos.clone().setY(pos.y + 1)) ||
+                    curr.position.equals(
+                        pos
+                            .clone()
+                            .setY(pos.y + 1)
+                            .setZ(pos.z - 1)
+                    ) ||
+                    curr.position.equals(
+                        pos
+                            .clone()
+                            .setY(pos.y + 1)
+                            .setZ(pos.z + 1)
+                    ) ||
+                    curr.position.equals(pos.clone().setZ(pos.z - 1)) ||
+                    curr.position.equals(pos.clone().setZ(pos.z + 1));
 
                 if (isNeighbor) {
                     this.cubes[i].numNeighbors++;
@@ -109,15 +242,13 @@ class CubeGrids extends Group {
         if (cube.flag == 0) {
             cube.material = this.revealMat[27];
             cube.flag = 1;
-            this.unMarkedBombs--;     
-        }
-        else if (cube.flag == 1) {
+            this.unMarkedBombs--;
+        } else if (cube.flag == 1) {
             cube.material = this.revealMat[28];
             cube.flag = 2;
             this.unMarkedBombs++;
-        }
-        else if (cube.flag == 2) {
-            cube.material = new MeshMatcapMaterial(); 
+        } else if (cube.flag == 2) {
+            cube.material = new MeshMatcapMaterial();
             cube.flag = 0;
         }
         // console.log(this.unMarkedBombs+" bombs left");
@@ -127,15 +258,12 @@ class CubeGrids extends Group {
     highlight(cube, cubes) {
         if (cube != undefined && cubes.uuid == cube.uuid) {
             cubes.material = new MeshStandardMaterial({ color: 0xf7f914 });
-        }
-        else {
+        } else {
             if (cubes.flag == 0) {
                 cubes.material = new MeshMatcapMaterial();
-            }
-            else if (cubes.flag == 1) {
+            } else if (cubes.flag == 1) {
                 cubes.material = this.revealMat[27];
-            }
-            else if (cubes.flag == 2) {
+            } else if (cubes.flag == 2) {
                 cubes.material = this.revealMat[28];
             }
         }
@@ -160,7 +288,7 @@ class CubeGrids extends Group {
                 this.cubes.splice(i, 1);
                 i--;
             }
-        } 
+        }
     }
 
     // reveals all bombs; occurs when user loses
@@ -189,8 +317,7 @@ class CubeGrids extends Group {
             const revealMat = new MeshMatcapMaterial({ color: 0x9e9e9e });
             cube.material = revealMat;
             this.revealNeighboringCubes(cube, parent);
-        }
-        else {
+        } else {
             cube.material = this.revealMat[cube.numNeighbors];
             if (this.gridType) {
                 cube.material.transparent = true;
@@ -205,32 +332,142 @@ class CubeGrids extends Group {
             const pos = cube.position.clone();
 
             // true if currCube is an unrevealed neighboring cube of cube
-            const isNeighbor = !currCube.reveal && (currCube.position.equals(pos.clone().setX(pos.x - 1)) ||
-            currCube.position.equals(pos.clone().setX(pos.x - 1).setY(pos.y - 1)) ||
-            currCube.position.equals(pos.clone().setX(pos.x - 1).setY(pos.y - 1).setZ(pos.z - 1)) ||
-            currCube.position.equals(pos.clone().setX(pos.x - 1).setY(pos.y - 1).setZ(pos.z + 1)) ||
-            currCube.position.equals(pos.clone().setX(pos.x - 1).setY(pos.y + 1)) ||
-            currCube.position.equals(pos.clone().setX(pos.x - 1).setY(pos.y + 1).setZ(pos.z - 1)) ||
-            currCube.position.equals(pos.clone().setX(pos.x - 1).setY(pos.y + 1).setZ(pos.z + 1)) ||
-            currCube.position.equals(pos.clone().setX(pos.x - 1).setZ(pos.z - 1)) ||
-            currCube.position.equals(pos.clone().setX(pos.x - 1).setZ(pos.z + 1)) ||
-            currCube.position.equals(pos.clone().setX(pos.x + 1)) ||
-            currCube.position.equals(pos.clone().setX(pos.x + 1).setY(pos.y - 1)) ||
-            currCube.position.equals(pos.clone().setX(pos.x + 1).setY(pos.y - 1).setZ(pos.z - 1)) ||
-            currCube.position.equals(pos.clone().setX(pos.x + 1).setY(pos.y - 1).setZ(pos.z + 1)) ||
-            currCube.position.equals(pos.clone().setX(pos.x + 1).setY(pos.y + 1)) ||
-            currCube.position.equals(pos.clone().setX(pos.x + 1).setY(pos.y + 1).setZ(pos.z - 1)) ||
-            currCube.position.equals(pos.clone().setX(pos.x + 1).setY(pos.y + 1).setZ(pos.z + 1)) ||
-            currCube.position.equals(pos.clone().setX(pos.x + 1).setZ(pos.z - 1)) ||
-            currCube.position.equals(pos.clone().setX(pos.x + 1).setZ(pos.z + 1)) ||
-            currCube.position.equals(pos.clone().setY(pos.y - 1)) ||
-            currCube.position.equals(pos.clone().setY(pos.y - 1).setZ(pos.z - 1)) ||
-            currCube.position.equals(pos.clone().setY(pos.y - 1).setZ(pos.z + 1)) ||
-            currCube.position.equals(pos.clone().setY(pos.y + 1)) ||
-            currCube.position.equals(pos.clone().setY(pos.y + 1).setZ(pos.z - 1)) ||
-            currCube.position.equals(pos.clone().setY(pos.y + 1).setZ(pos.z + 1)) ||
-            currCube.position.equals(pos.clone().setZ(pos.z - 1)) ||
-            currCube.position.equals(pos.clone().setZ(pos.z + 1)));
+            const isNeighbor =
+                !currCube.reveal &&
+                (currCube.position.equals(pos.clone().setX(pos.x - 1)) ||
+                    currCube.position.equals(
+                        pos
+                            .clone()
+                            .setX(pos.x - 1)
+                            .setY(pos.y - 1)
+                    ) ||
+                    currCube.position.equals(
+                        pos
+                            .clone()
+                            .setX(pos.x - 1)
+                            .setY(pos.y - 1)
+                            .setZ(pos.z - 1)
+                    ) ||
+                    currCube.position.equals(
+                        pos
+                            .clone()
+                            .setX(pos.x - 1)
+                            .setY(pos.y - 1)
+                            .setZ(pos.z + 1)
+                    ) ||
+                    currCube.position.equals(
+                        pos
+                            .clone()
+                            .setX(pos.x - 1)
+                            .setY(pos.y + 1)
+                    ) ||
+                    currCube.position.equals(
+                        pos
+                            .clone()
+                            .setX(pos.x - 1)
+                            .setY(pos.y + 1)
+                            .setZ(pos.z - 1)
+                    ) ||
+                    currCube.position.equals(
+                        pos
+                            .clone()
+                            .setX(pos.x - 1)
+                            .setY(pos.y + 1)
+                            .setZ(pos.z + 1)
+                    ) ||
+                    currCube.position.equals(
+                        pos
+                            .clone()
+                            .setX(pos.x - 1)
+                            .setZ(pos.z - 1)
+                    ) ||
+                    currCube.position.equals(
+                        pos
+                            .clone()
+                            .setX(pos.x - 1)
+                            .setZ(pos.z + 1)
+                    ) ||
+                    currCube.position.equals(pos.clone().setX(pos.x + 1)) ||
+                    currCube.position.equals(
+                        pos
+                            .clone()
+                            .setX(pos.x + 1)
+                            .setY(pos.y - 1)
+                    ) ||
+                    currCube.position.equals(
+                        pos
+                            .clone()
+                            .setX(pos.x + 1)
+                            .setY(pos.y - 1)
+                            .setZ(pos.z - 1)
+                    ) ||
+                    currCube.position.equals(
+                        pos
+                            .clone()
+                            .setX(pos.x + 1)
+                            .setY(pos.y - 1)
+                            .setZ(pos.z + 1)
+                    ) ||
+                    currCube.position.equals(
+                        pos
+                            .clone()
+                            .setX(pos.x + 1)
+                            .setY(pos.y + 1)
+                    ) ||
+                    currCube.position.equals(
+                        pos
+                            .clone()
+                            .setX(pos.x + 1)
+                            .setY(pos.y + 1)
+                            .setZ(pos.z - 1)
+                    ) ||
+                    currCube.position.equals(
+                        pos
+                            .clone()
+                            .setX(pos.x + 1)
+                            .setY(pos.y + 1)
+                            .setZ(pos.z + 1)
+                    ) ||
+                    currCube.position.equals(
+                        pos
+                            .clone()
+                            .setX(pos.x + 1)
+                            .setZ(pos.z - 1)
+                    ) ||
+                    currCube.position.equals(
+                        pos
+                            .clone()
+                            .setX(pos.x + 1)
+                            .setZ(pos.z + 1)
+                    ) ||
+                    currCube.position.equals(pos.clone().setY(pos.y - 1)) ||
+                    currCube.position.equals(
+                        pos
+                            .clone()
+                            .setY(pos.y - 1)
+                            .setZ(pos.z - 1)
+                    ) ||
+                    currCube.position.equals(
+                        pos
+                            .clone()
+                            .setY(pos.y - 1)
+                            .setZ(pos.z + 1)
+                    ) ||
+                    currCube.position.equals(pos.clone().setY(pos.y + 1)) ||
+                    currCube.position.equals(
+                        pos
+                            .clone()
+                            .setY(pos.y + 1)
+                            .setZ(pos.z - 1)
+                    ) ||
+                    currCube.position.equals(
+                        pos
+                            .clone()
+                            .setY(pos.y + 1)
+                            .setZ(pos.z + 1)
+                    ) ||
+                    currCube.position.equals(pos.clone().setZ(pos.z - 1)) ||
+                    currCube.position.equals(pos.clone().setZ(pos.z + 1)));
 
             if (isNeighbor) {
                 this.revealCubes(currCube, parent);
