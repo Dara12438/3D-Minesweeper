@@ -51,21 +51,11 @@ import questionPic from '../src/components/images/question.png';
 const images = [bombPic, img1, img2, img3, img4, img5, img6, img7, img8, img9, img10, img11, img12, img13, img14, img15, img16, img17, img18, img19, img20, img21, img22, img23, img24, img25, img26, exclaimPic, questionPic];
 
 // Initialize core ThreeJS components
-//const scene = new Launch();
-
-// true - FilledScene; false - HollowScene
-let scene = new CubeScenes(false, 1, 2, images);
+let scene = new CubeScenes(false, 1, 2, images); // true - FilledScene; false - HollowScene
 const camera = new PerspectiveCamera();
 const renderer = new WebGLRenderer({ antialias: true });
 let mouseX;
 let mouseY;
-
-// Set up camera
-// camera.position.set(6, 3, -10);
-// camera.position.set(25, 25, -25);
-// camera.lookAt(new Vector3(0, 0, 0));
-
-
 
 // Set up renderer, canvas, and minor CSS adjustments
 renderer.setPixelRatio(window.devicePixelRatio);
@@ -90,27 +80,10 @@ let page = document.createElement("BODY");
 page.style.cssText = 'background: #9e9e9e;';
 document.body = page;
 
-let html =
-'<button onclick="setScene()">Click Here to Begin!</button>'+
-'<script>' +
-'var slider = document.getElementById("myRange");' +
-'var output = document.getElementById("demo");' +
-'var output2 = document.getElementById("demo2");' +
-'var output3 = document.getElementById("demo3");' +
-'output.innerHTML = slider.value;' +
-'output2.innerHTML = slider.value;' +
-'output3.innerHTML = document.slider.value;' +
-'slider.oninput = function() {' +
-'output.innerHTML = this.value;' +
-'output2.innerHTML = this.value;' +
-'output3.innerHTML = this.value;}' +
-'</script>';
-
-
 let beginText = document.createElement("div");
 document.body.appendChild(beginText);
 beginText.innerHTML = '<center><h2>How to Play:</h2></center>' +
-'<p>This game takes the classic Minesweeper and moves it to a 3D cube. When you click on a block you can reveal either a number, an empty space, or a bomb. Your goal is to reveal every block without a bomb inside. Numbered blocks will tell you whether there is a bomb anywhere in its vicinity (anywhere in the 3x3 space centered around that cube). However, if you reveal a bomb you lose and the game ends. If you wish to play again, just refresh the page to be taken back here. </p>' +
+'<p>This game takes the classic Minesweeper and moves it to a 3D cube. When you click on a block you can reveal either a number, an empty space, or a bomb. Your goal is to reveal every block without a bomb inside. Numbered blocks will tell you whether there is a bomb anywhere in its vicinity (anywhere in the 3x3 space centered around that cube). However, if you reveal a bomb you lose and the game ends. If you wish to play again with different settings, just refresh the page to be taken back here. </p>' +
 '<center><h3>Controls</h3></center>' +
 '<p><b>Scroll Wheel:</b> Zoom in/out on cube</p>' +
 '<p><b>Left Click and Drag:</b> Rotate cube</p>' +
@@ -143,7 +116,7 @@ function faceResize() {
 startingParts.push(sliderBlocks);
 startingParts.push(sizeOutput);
 
-//Difficulty header
+// Difficulty header
 const diffText = document.createElement("div");
 diffText.innerHTML = '<center><h2>Choose Your Difficulty:</h2>';
 document.body.appendChild(diffText);
@@ -174,11 +147,11 @@ diffDropdown.onchange = diffChange;
 document.body.appendChild(diffDropdown);
 startingParts.push(diffDropdown);
 
-function diffChange () {
+function diffChange() {
     diffValue = document.getElementById("diff").value;
 }
 
-//Cube type header
+// Cube type header
 const cubeText = document.createElement("div");
 cubeText.innerHTML = '<center><h2>Choose Your Playing Field:</h2>';
 document.body.appendChild(cubeText);
@@ -205,10 +178,11 @@ cubeDropdown.onchange = cubeChange;
 document.body.appendChild(cubeDropdown);
 startingParts.push(cubeDropdown);
 
-function cubeChange () {
+function cubeChange() {
     cubeValue = document.getElementById("cubeSpace").value;
 }
 
+// Start game button
 const button = document.createElement('button');
 document.body.appendChild(button);
 startingParts.push(button);
@@ -217,26 +191,51 @@ button.style.width = "100%";
 button.innerHTML = "Start the Game!";
 button.addEventListener("click", startGame, false);
 
-function startGame (event) {
-    setGameUp();
-}
-
-function setGameUp () {
+// Remove html page and displays the game scene
+function startGame() {
+    // remove html page
     startingParts.forEach((startingPart) => startingPart.remove());
-    startingParts = null;
-    page.style.cssText = '';
+    startingParts = [];
     canvas.style.display = 'block'; // Removes padding below canvas
     document.body.style.margin = 0; // Removes margin around page
     document.body.style.overflow = 'hidden'; // Fix scrolling
 
+    // create scene with given inputs
+    scene.grid.removeAllCubes();
     scene = new CubeScenes(cubeValue, diffValue, faceSize, images);
-    camera.position.set(faceSize, faceSize, -faceSize);
+    camera.position.set(1.5 * faceSize, 1.5 * faceSize, 1.5 * faceSize);
     document.body.appendChild(canvas);
     uploadAudio();
+
+    // reset button
+    const resetButton = document.createElement('button');
+    document.body.appendChild(resetButton);
+    startingParts.push(resetButton);
+    resetButton.id = "resetButton";
+    resetButton.style.fontFamily = 'Monaco';
+    resetButton.style.fontSize = '20px';
+    resetButton.style.position = 'absolute';
+    resetButton.style.right = '20px';
+    resetButton.style.top = '20px';
+    resetButton.style.color = 'red';
+    resetButton.style.padding = '10px';
+    resetButton.style.backgroundColor = 'black';
+    resetButton.innerHTML = "Restart";
+    resetButton.addEventListener("click", reset, false);
+}
+
+// Resets game with previous selected settings
+function reset() {
+    scene.divElements.forEach((startingPart) => startingPart.remove());
+    scene.divElements = [];
+    scene.grid.removeAllCubes();
+    if (scene.gameOver) {
+        ongoingSound.play();
+    }
+    scene = new CubeScenes(cubeValue, diffValue, faceSize, images);
 }
 
 // Set up camera
-// camera.position.set(6, 3, -10);
 camera.lookAt(new Vector3(0, 0, 0));
 
 // Set up controls
@@ -244,27 +243,28 @@ const controls = new OrbitControls(camera, canvas);
 controls.enableDamping = true;
 controls.enablePan = false;
 controls.minDistance = 4;
-controls.maxDistance = faceSize + 1;
+controls.maxDistance = 50;
 controls.update();
 
 
-window.addEventListener("keydown", cameraMovement, false);
+// window.addEventListener("keydown", cameraMovement, false);
 canvas.addEventListener("mousemove", onMouseMove, false);
 canvas.addEventListener("mousedown", onMouseDown, false);
 canvas.addEventListener("mouseup", onMouseUp, false);
 
-function cameraMovement(event) {
-    const keyMap = {
-         ArrowUp: new Vector3(0,  1,  0),
-         ArrowDown: new Vector3(0,  -1,  0),
-         ArrowLeft: new Vector3(-1,  0,  0),
-         ArrowRight: new Vector3(1,  0,  0),
-       };
-     const key = keyMap[event.key];
-     if (key !== undefined) {
-     camera.position.add(key);
-    }
-}
+// Doesn't work properly
+// function cameraMovement(event) {
+//     const keyMap = {
+//          ArrowUp: new Vector3(0,  1,  0),
+//          ArrowDown: new Vector3(0,  -1,  0),
+//          ArrowLeft: new Vector3(-1,  0,  0),
+//          ArrowRight: new Vector3(1,  0,  0),
+//        };
+//      const key = keyMap[event.key];
+//      if (key !== undefined) {
+//      camera.position.add(key);
+//     }
+// }
 
 function onMouseMove(event) {
     if (!scene.gameOver) {
@@ -278,6 +278,7 @@ function onMouseDown(event) {
 }
 
 function onMouseUp(event) {
+    // if drag instead of click
     if (Math.abs(mouseX - event.clientX) + Math.abs(mouseY - event.clientY) > 4) {
         return;
     }
@@ -286,13 +287,13 @@ function onMouseUp(event) {
     if (!scene.gameOver) {
         if (event.button == 0) {
             soundPlay = scene.revealCube(event, camera);
-            
         }
         else {
             soundPlay = scene.flagCube(event,camera);
         }
         scene.displayBombsLeft();
 
+        // play appropriate game over sound
         if (scene.gameOver) {
             ongoingSound.stop();
             if (scene.gameOverText == "You hit a bomb!") {
@@ -302,6 +303,7 @@ function onMouseUp(event) {
                 inGameAudio(win);
             }
         }
+        // play reveal cube sound
         else {
             if (soundPlay == 1) {
                 inGameAudio(reveal);
@@ -311,10 +313,9 @@ function onMouseUp(event) {
 }
 
 // Render loop
-const onAnimationFrameHandler = (timeStamp) => {
+const onAnimationFrameHandler = () => {
     controls.update();
     renderer.render(scene, camera);
-    // scene.update && scene.update(timeStamp);
     window.requestAnimationFrame(onAnimationFrameHandler);
 };
 window.requestAnimationFrame(onAnimationFrameHandler);
@@ -326,18 +327,17 @@ const windowResizeHandler = () => {
     renderer.setSize(innerWidth, innerHeight);
     camera.aspect = innerWidth / innerHeight;
     camera.updateProjectionMatrix();
+    scene.update();
 };
 windowResizeHandler();
 window.addEventListener('resize', windowResizeHandler, false);
 
-// add audio
+// Plays music
 var audioListener = new AudioListener();
 camera.add(audioListener);
 var ongoingSound = new Audio(audioListener);
 
 function uploadAudio() {
-    //var audioListener = new AudioListener();
-    //camera.add(audioListener);
     var sound = new Audio(audioListener);
     var audioLoader = new AudioLoader();
 
@@ -349,7 +349,7 @@ function uploadAudio() {
         audioChoice = hardAudio;
     }
 
-    audioLoader.load(audioChoice, function (buffer) {
+    audioLoader.load(audioChoice, function(buffer) {
         sound.setBuffer(buffer);
         sound.setLoop(true);
         sound.setVolume(0.1);
@@ -358,13 +358,14 @@ function uploadAudio() {
     });
 }
 
+// Plays sound effects
 function inGameAudio(audio) {
     var audioListener = new AudioListener();
     camera.add(audioListener);
     var sound = new Audio(audioListener);
     var audioLoader = new AudioLoader();
 
-    audioLoader.load(audio, function (buffer) {
+    audioLoader.load(audio, function(buffer) {
         sound.setBuffer(buffer);
         sound.setLoop(false);
         sound.setVolume(0.5);

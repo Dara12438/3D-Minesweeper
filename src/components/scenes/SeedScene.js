@@ -1,10 +1,12 @@
+// Unused File
+
 import * as Dat from 'dat.gui';
 import { Scene, Color} from 'three';
 import * as THREE from 'three';
 // import { Flower, Land, Cube } from 'objects';
 import { BasicLights } from 'lights';
 // import { Grid } from '../Grids';
-import { HollowGrid } from "../Grids";
+import { CubeGrids } from "../Grids";
 
 class SeedScene extends Scene {
     constructor() {
@@ -34,7 +36,7 @@ class SeedScene extends Scene {
         // Add meshes to scene
         // const land = new Land();
         // const grid = new Grid();
-        this.grid = new HollowGrid();
+        this.grid = new CubeGrids();
         // grid.initializeCubes();
         // const cube = new Cube();
         const lights = new BasicLights();

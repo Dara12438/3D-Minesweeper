@@ -1,6 +1,5 @@
-import { Group } from 'three';
+import { Group, TextureLoader, MeshMatcapMaterial, MeshStandardMaterial, Vector3 } from 'three';
 import { Cube } from 'objects';
-import * as THREE from 'three';
 
 class CubeGrids extends Group {
     constructor(isFilled, difficulty, size, images) {
@@ -19,8 +18,8 @@ class CubeGrids extends Group {
         // cube textures
         this.revealMat = [];
         for (let i = 0; i < images.length; i++) {
-            const revealTex = new THREE.TextureLoader().load(images[i]);
-            this.revealMat.push(new THREE.MeshMatcapMaterial({ map: revealTex }));
+            const revealTex = new TextureLoader().load(images[i]);
+            this.revealMat.push(new MeshMatcapMaterial({ map: revealTex }));
         }
 
         // create cubes
@@ -29,15 +28,15 @@ class CubeGrids extends Group {
                 for (let z = 0; z < this.size; z++) {
                     if (isFilled || (x == 0 || x == this.size - 1 || y == 0 || y == this.size - 1 || z == 0 || z == this.size - 1)) {
                         const cube = new Cube(isFilled);
-                        cube.mesh.position.copy(new THREE.Vector3(x, y, z).subScalar(offset));
+                        cube.mesh.position.copy(new Vector3(x, y, z).subScalar(offset));
                         this.cubes.push(cube.mesh);
                     }
                 }
             }
         }
 
-        this.numBombs = (!isFilled && ((difficulty == 1) * (Math.floor(this.cubes.length * 0.08)) || (difficulty == 2) * (Math.floor(this.cubes.length * 0.12)) || (difficulty == 3) * (Math.floor(this.cubes.length * 0.14)))) ||
-                        ( isFilled && ((difficulty == 1) * (Math.floor(this.cubes.length * 0.06)) || (difficulty == 2) * (Math.floor(this.cubes.length * 0.10)) || (difficulty == 3) * (Math.floor(this.cubes.length * 0.12)))) || 1;
+        this.numBombs = (!isFilled && ((difficulty == 1) * (Math.floor(this.cubes.length * 0.08)) || (difficulty == 2) * (Math.floor(this.cubes.length * 0.14)) || (difficulty == 3) * (Math.floor(this.cubes.length * 0.20)))) ||
+                        ( isFilled && ((difficulty == 1) * (Math.floor(this.cubes.length * 0.06)) || (difficulty == 2) * (Math.floor(this.cubes.length * 0.10)) || (difficulty == 3) * (Math.floor(this.cubes.length * 0.14)))) || 1;
         this.unMarkedBombs = this.numBombs;
 
         // create bombs
@@ -53,7 +52,7 @@ class CubeGrids extends Group {
             }
         }
 
-        // determine neighboring bombs
+        // determine number of neighboring bombs for each cube
         for (let i = 0; i < this.cubes.length; i++) {
             for (let j = 0; j < this.bombs.length; j++) {
                 const pos = this.cubes[i].position.clone();
@@ -93,6 +92,7 @@ class CubeGrids extends Group {
         }
     }
 
+    // if all non-bomb cubes are revealed, the user wins
     checkWin() {
         for (const cubes of this.cubes) {
             if (!cubes.isBomb && !cubes.reveal) {
@@ -104,6 +104,7 @@ class CubeGrids extends Group {
         return true;
     }
 
+    // changes cube texture from white -> !, ! -> ?, or ? -> white
     flag(cube) {
         if (cube.flag == 0) {
             cube.material = this.revealMat[27];
@@ -116,7 +117,7 @@ class CubeGrids extends Group {
             this.unMarkedBombs++;
         }
         else if (cube.flag == 2) {
-            cube.material = new THREE.MeshMatcapMaterial(); 
+            cube.material = new MeshMatcapMaterial(); 
             cube.flag = 0;
         }
         // console.log(this.unMarkedBombs+" bombs left");
@@ -125,12 +126,11 @@ class CubeGrids extends Group {
     // highlights cube on the mouse and removes the highlights of other cubes
     highlight(cube, cubes) {
         if (cube != undefined && cubes.uuid == cube.uuid) {
-            cubes.material = new THREE.MeshStandardMaterial();
-            cubes.material.color = new THREE.Color(0xf7f914);
+            cubes.material = new MeshStandardMaterial({ color: 0xf7f914 });
         }
         else {
             if (cubes.flag == 0) {
-                cubes.material = new THREE.MeshMatcapMaterial();
+                cubes.material = new MeshMatcapMaterial();
             }
             else if (cubes.flag == 1) {
                 cubes.material = this.revealMat[27];
@@ -141,10 +141,11 @@ class CubeGrids extends Group {
         }
     }
 
+    // makes the remaining cubes transparent and sets cubes to an empty array (to use less data); occurs when game is over or reset
     removeAllCubes() {
         if (this.gridType) {
             for (const cube of this.cubes) {
-                cube.material = new THREE.MeshStandardMaterial({ color: 0xffffff });
+                cube.material = new MeshStandardMaterial({ color: 0xffffff });
                 cube.material.transparent = true;
                 cube.material.opacity = 0.15;
             }
@@ -152,6 +153,7 @@ class CubeGrids extends Group {
         this.cubes = [];
     }
 
+    // remove revealed cubes from cubes array to use less data
     removeRevealedCubes() {
         for (let i = 0; i < this.cubes.length; i++) {
             if (this.cubes[i].reveal) {
@@ -161,6 +163,7 @@ class CubeGrids extends Group {
         } 
     }
 
+    // reveals all bombs; occurs when user loses
     revealBombs() {
         for (const bomb of this.bombs) {
             bomb.reveal = true;
@@ -171,15 +174,19 @@ class CubeGrids extends Group {
         // console.log("You hit a bomb!");
     }
 
+    // changes texture of given cube to reveal it
     revealCubes(cube, parent) {
         cube.reveal = true;
+
+        // revealing flagged cube
         if (cube.flag == 1) {
             this.unMarkedBombs++;
             // console.log(this.unMarkedBombs+" bombs left");
         }
 
+        // changing material to reveal cube
         if (cube.numNeighbors == 0) {
-            const revealMat = new THREE.MeshMatcapMaterial({ color: 0x9e9e9e });
+            const revealMat = new MeshMatcapMaterial({ color: 0x9e9e9e });
             cube.material = revealMat;
             this.revealNeighboringCubes(cube, parent);
         }
@@ -192,40 +199,43 @@ class CubeGrids extends Group {
         }
     }
 
+    // reveals clusters of cubes with 0 neighboring bombs
     revealNeighboringCubes(cube, parent) {
-        for (const cubes of this.cubes) {
+        for (const currCube of this.cubes) {
             const pos = cube.position.clone();
 
-            const isNeighbor = !cubes.reveal && (cubes.position.equals(pos.clone().setX(pos.x - 1)) ||
-            cubes.position.equals(pos.clone().setX(pos.x - 1).setY(pos.y - 1)) ||
-            cubes.position.equals(pos.clone().setX(pos.x - 1).setY(pos.y - 1).setZ(pos.z - 1)) ||
-            cubes.position.equals(pos.clone().setX(pos.x - 1).setY(pos.y - 1).setZ(pos.z + 1)) ||
-            cubes.position.equals(pos.clone().setX(pos.x - 1).setY(pos.y + 1)) ||
-            cubes.position.equals(pos.clone().setX(pos.x - 1).setY(pos.y + 1).setZ(pos.z - 1)) ||
-            cubes.position.equals(pos.clone().setX(pos.x - 1).setY(pos.y + 1).setZ(pos.z + 1)) ||
-            cubes.position.equals(pos.clone().setX(pos.x - 1).setZ(pos.z - 1)) ||
-            cubes.position.equals(pos.clone().setX(pos.x - 1).setZ(pos.z + 1)) ||
-            cubes.position.equals(pos.clone().setX(pos.x + 1)) ||
-            cubes.position.equals(pos.clone().setX(pos.x + 1).setY(pos.y - 1)) ||
-            cubes.position.equals(pos.clone().setX(pos.x + 1).setY(pos.y - 1).setZ(pos.z - 1)) ||
-            cubes.position.equals(pos.clone().setX(pos.x + 1).setY(pos.y - 1).setZ(pos.z + 1)) ||
-            cubes.position.equals(pos.clone().setX(pos.x + 1).setY(pos.y + 1)) ||
-            cubes.position.equals(pos.clone().setX(pos.x + 1).setY(pos.y + 1).setZ(pos.z - 1)) ||
-            cubes.position.equals(pos.clone().setX(pos.x + 1).setY(pos.y + 1).setZ(pos.z + 1)) ||
-            cubes.position.equals(pos.clone().setX(pos.x + 1).setZ(pos.z - 1)) ||
-            cubes.position.equals(pos.clone().setX(pos.x + 1).setZ(pos.z + 1)) ||
-            cubes.position.equals(pos.clone().setY(pos.y - 1)) ||
-            cubes.position.equals(pos.clone().setY(pos.y - 1).setZ(pos.z - 1)) ||
-            cubes.position.equals(pos.clone().setY(pos.y - 1).setZ(pos.z + 1)) ||
-            cubes.position.equals(pos.clone().setY(pos.y + 1)) ||
-            cubes.position.equals(pos.clone().setY(pos.y + 1).setZ(pos.z - 1)) ||
-            cubes.position.equals(pos.clone().setY(pos.y + 1).setZ(pos.z + 1)) ||
-            cubes.position.equals(pos.clone().setZ(pos.z - 1)) ||
-            cubes.position.equals(pos.clone().setZ(pos.z + 1)));
+            // true if currCube is an unrevealed neighboring cube of cube
+            const isNeighbor = !currCube.reveal && (currCube.position.equals(pos.clone().setX(pos.x - 1)) ||
+            currCube.position.equals(pos.clone().setX(pos.x - 1).setY(pos.y - 1)) ||
+            currCube.position.equals(pos.clone().setX(pos.x - 1).setY(pos.y - 1).setZ(pos.z - 1)) ||
+            currCube.position.equals(pos.clone().setX(pos.x - 1).setY(pos.y - 1).setZ(pos.z + 1)) ||
+            currCube.position.equals(pos.clone().setX(pos.x - 1).setY(pos.y + 1)) ||
+            currCube.position.equals(pos.clone().setX(pos.x - 1).setY(pos.y + 1).setZ(pos.z - 1)) ||
+            currCube.position.equals(pos.clone().setX(pos.x - 1).setY(pos.y + 1).setZ(pos.z + 1)) ||
+            currCube.position.equals(pos.clone().setX(pos.x - 1).setZ(pos.z - 1)) ||
+            currCube.position.equals(pos.clone().setX(pos.x - 1).setZ(pos.z + 1)) ||
+            currCube.position.equals(pos.clone().setX(pos.x + 1)) ||
+            currCube.position.equals(pos.clone().setX(pos.x + 1).setY(pos.y - 1)) ||
+            currCube.position.equals(pos.clone().setX(pos.x + 1).setY(pos.y - 1).setZ(pos.z - 1)) ||
+            currCube.position.equals(pos.clone().setX(pos.x + 1).setY(pos.y - 1).setZ(pos.z + 1)) ||
+            currCube.position.equals(pos.clone().setX(pos.x + 1).setY(pos.y + 1)) ||
+            currCube.position.equals(pos.clone().setX(pos.x + 1).setY(pos.y + 1).setZ(pos.z - 1)) ||
+            currCube.position.equals(pos.clone().setX(pos.x + 1).setY(pos.y + 1).setZ(pos.z + 1)) ||
+            currCube.position.equals(pos.clone().setX(pos.x + 1).setZ(pos.z - 1)) ||
+            currCube.position.equals(pos.clone().setX(pos.x + 1).setZ(pos.z + 1)) ||
+            currCube.position.equals(pos.clone().setY(pos.y - 1)) ||
+            currCube.position.equals(pos.clone().setY(pos.y - 1).setZ(pos.z - 1)) ||
+            currCube.position.equals(pos.clone().setY(pos.y - 1).setZ(pos.z + 1)) ||
+            currCube.position.equals(pos.clone().setY(pos.y + 1)) ||
+            currCube.position.equals(pos.clone().setY(pos.y + 1).setZ(pos.z - 1)) ||
+            currCube.position.equals(pos.clone().setY(pos.y + 1).setZ(pos.z + 1)) ||
+            currCube.position.equals(pos.clone().setZ(pos.z - 1)) ||
+            currCube.position.equals(pos.clone().setZ(pos.z + 1)));
 
             if (isNeighbor) {
-                this.revealCubes(cubes, parent);
+                this.revealCubes(currCube, parent);
             }
+            // removes cubes with 0 neighboring bombs from scene
             if (this.gridType) {
                 parent.remove(cube);
             }

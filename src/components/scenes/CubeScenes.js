@@ -1,5 +1,4 @@
-import { Scene, Color } from 'three';
-import * as THREE from 'three';
+import { Scene, Color, Vector2, Raycaster } from 'three';
 import { BasicLights } from 'lights';
 import { CubeGrids } from "../Grids";
 
@@ -20,17 +19,11 @@ class CubeScenes extends Scene {
             this.add(cubes);
         }
         
-
         this.divElements = [];
-        const text = "Bombs Left: ";
-        const flagText = this.createText(text + this.bombsLeft(), '20px', '20px', '20px');
-        this.divElements.push(flagText);
+        this.displayBombsLeft();
     }
 
-    bombsLeft() {
-        return this.grid.unMarkedBombs;
-    }
-
+    // Create html text
     createText(str, top, left, size) {
         const text = document.createElement('div');
         document.body.appendChild(text);
@@ -43,6 +36,7 @@ class CubeScenes extends Scene {
         return text;
     }
 
+    // Displays difference of number of bombs and marked (!) cubes
     displayBombsLeft() {
         if (this.divElements.length == 1) {
             this.divElements.forEach((startingPart) => startingPart.remove());
@@ -50,11 +44,14 @@ class CubeScenes extends Scene {
         }
         
         const text = "Bombs Left: ";
-        const flagText = this.createText(text + this.bombsLeft(), '20px', '20px', '20px');
+        const flagText = this.createText(text + this.grid.unMarkedBombs, '20px', '20px', '20px');
+        flagText.style.color = 'red';
+        flagText.style.padding = '10px';
+        flagText.style.backgroundColor = 'black';
         this.divElements.push(flagText);
     }
     
-    // places markers on unrevealed cubes
+    // Places markers on unrevealed cubes
     flagCube(event, camera) {
         const cube = this.getNearestCube(event, camera);
         if (cube != undefined) {
@@ -63,10 +60,10 @@ class CubeScenes extends Scene {
         }
     }
 
-    // returns first unrevealed cube that the mouse intersects
+    // Returns first unrevealed cube that the mouse intersects
     getNearestCube(event, camera) {
-        const mouse = new THREE.Vector2((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1);
-        const raycaster = new THREE.Raycaster()
+        const mouse = new Vector2((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1);
+        const raycaster = new Raycaster()
         raycaster.setFromCamera(mouse, camera);
 
         const intersects = raycaster.intersectObjects(this.children, false);
@@ -75,7 +72,7 @@ class CubeScenes extends Scene {
         }
     }
 
-    // highlights unrevealed cube
+    // Highlights unrevealed cube
     highlightCube(event, camera) {
         const cube = this.getNearestCube(event, camera);
         for (const cubes of this.grid.cubes) {
@@ -83,25 +80,25 @@ class CubeScenes extends Scene {
         }
     }
 
-    // reveals clicked cube
+    // Reveals selected cube
     revealCube(event, camera) {
         const cube = this.getNearestCube(event, camera);
         if (cube != undefined && !cube.isBomb) {
-            // reveals cluster of blank cubes 
             this.grid.revealCubes(cube, this);
             this.grid.removeRevealedCubes();
             this.gameOver = this.grid.checkWin();
         }
-        // bomb was hit
         else if (cube != undefined && cube.isBomb) {
             this.grid.revealBombs();
             this.gameOver = true;
             this.gameOverText = "You hit a bomb!";
         }
 
+        // Game over message
         if (this.gameOver) {
-            const message = this.createText(this.gameOverText, '20%', '10px', '40px');
+            const message = this.createText(this.gameOverText, '10%', '0px', '40px');
             message.style.left = (window.innerWidth - message.clientWidth) / 2 + 'px';
+
             if (this.gameOverText == "You Win!") {
                 message.style.color = 'green';
             }
@@ -114,6 +111,13 @@ class CubeScenes extends Scene {
         if (cube != undefined) {
             return 1;
         }
+    }
+
+    // Centers game over message
+    update() {
+       if (this.gameOver) {
+           this.divElements[1].style.left = (window.innerWidth -  this.divElements[1].clientWidth) / 2 + 'px';
+       }
     }
 }
 

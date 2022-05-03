@@ -1,5 +1,4 @@
-import { Group } from 'three';
-import * as THREE from 'three';
+import { Group, BoxGeometry, MeshMatcapMaterial, Mesh } from 'three';
 
 class Cube extends Group {
     constructor(isFilled) {
@@ -8,18 +7,19 @@ class Cube extends Group {
 
         this.name = 'cube';
 
-        let geometry = new THREE.BoxGeometry(0.995, 0.995, 0.995);
+        // create mesh
+        let geometry = new BoxGeometry(0.995, 0.995, 0.995);
         if (isFilled) {
-            geometry = new THREE.BoxGeometry( 0.9, 0.9, 0.9 );
+            geometry = new BoxGeometry( 0.9, 0.9, 0.9 );
         }
-        const material = new THREE.MeshMatcapMaterial();
-        this.mesh = new THREE.Mesh(geometry, material);
+        const material = new MeshMatcapMaterial();
+        this.mesh = new Mesh(geometry, material);
 
+        // cube instance variables
         this.mesh.isBomb = false;
         this.mesh.numNeighbors = 0;
         this.mesh.reveal = false;
         this.mesh.flag = 0;
-
     }
 }
 
