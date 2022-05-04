@@ -294,8 +294,8 @@ camera.lookAt(new Vector3(0, 0, 0));
 const controls = new OrbitControls(camera, canvas);
 controls.enableDamping = true;
 controls.enablePan = false;
-controls.minDistance = 4;
-controls.maxDistance = 50;
+controls.minDistance = 2;
+controls.maxDistance = 32;
 controls.update();
 
 // window.addEventListener("keydown", cameraMovement, false);
