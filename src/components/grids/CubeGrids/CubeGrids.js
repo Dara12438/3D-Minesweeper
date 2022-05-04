@@ -36,7 +36,7 @@ class CubeGrids extends Group {
         }
 
         this.numBombs = (!isFilled && ((difficulty == 1) * (Math.floor(this.cubes.length * 0.08)) || (difficulty == 2) * (Math.floor(this.cubes.length * 0.14)) || (difficulty == 3) * (Math.floor(this.cubes.length * 0.20)))) ||
-                        ( isFilled && ((difficulty == 1) * (Math.floor(this.cubes.length * 0.06)) || (difficulty == 2) * (Math.floor(this.cubes.length * 0.10)) || (difficulty == 3) * (Math.floor(this.cubes.length * 0.14)))) || 1;
+                        ( isFilled && ((difficulty == 1) * (Math.floor(this.cubes.length * 0.04)) || (difficulty == 2) * (Math.floor(this.cubes.length * 0.07)) || (difficulty == 3) * (Math.floor(this.cubes.length * 0.10)))) || 1;
         this.unMarkedBombs = this.numBombs;
 
         // create bombs
