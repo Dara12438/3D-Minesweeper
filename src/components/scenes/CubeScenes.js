@@ -74,7 +74,13 @@ class CubeScenes extends Scene {
         const raycaster = new Raycaster();
         raycaster.setFromCamera(mouse, camera);
 
-        const intersects = raycaster.intersectObjects(this.children, false);
+        let intersects;
+        if (this.grid.gridType) {
+            intersects = raycaster.intersectObjects(this.grid.cubes, false);
+        }
+        else {
+            intersects = raycaster.intersectObjects(this.children, false);
+        }
         if (intersects.length > 0 && !intersects[0].object.reveal) {
             return intersects[0].object;
         }
