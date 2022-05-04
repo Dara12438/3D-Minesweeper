@@ -107,20 +107,20 @@
 //             }
 //         }
 //     }
-
+    
 //     flagCube(event, camera) {
 //         const cube = this.getNearestCube(event, camera);
 //         if (cube != undefined && !cube.reveal) {
 //             if (cube.flag == 0) {
 //                 cube.material = this.revealMat[9];
-//                 cube.flag = 1;
+//                 cube.flag = 1;     
 //             }
 //             else if (cube.flag == 1) {
-//                 cube.material = this.revealMat[10];;
+//                 cube.material = this.revealMat[10];; 
 //                 cube.flag = 2;
 //             }
 //             else if (cube.flag == 2) {
-//                 cube.material = new THREE.MeshMatcapMaterial();
+//                 cube.material = new THREE.MeshMatcapMaterial(); 
 //                 cube.flag = 0;
 //             }
 //         }
@@ -182,6 +182,7 @@
 //                 }
 //             }
 
+
 //             // if (!curr.reveal)
 //             // if (curr.position.equals(pos.clone().setX(pos.x - 1))) {
 //             //     this.revealNeighboringCubes(curr);
@@ -238,6 +239,7 @@
 //             // if (curr.position.equals(pos.clone().setX(pos.x + 1).setZ(pos.z + 1))) {
 //             //     this.revealNeighboringCubes(curr);
 //             // }
+
 
 //             // if (curr.position.equals(pos.clone().setY(pos.y - 1))) {
 //             //     this.revealNeighboringCubes(curr);
