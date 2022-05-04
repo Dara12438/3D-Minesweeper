@@ -179,7 +179,7 @@ document.body.appendChild(cubeDropdown);
 startingParts.push(cubeDropdown);
 
 function cubeChange() {
-    cubeValue = document.getElementById("cubeSpace").value;
+    cubeValue = !cubeValue;
 }
 
 // Start game button
