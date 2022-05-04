@@ -46,9 +46,10 @@ import img24 from '../src/components/images/24.png';
 import img25 from '../src/components/images/25.png';
 import img26 from '../src/components/images/26.png';
 import bombPic from '../src/components/images/bomb.png';
+import redBombPic from '../src/components/images/redbomb.png';
 import exclaimPic from '../src/components/images/exclaim.png';
 import questionPic from '../src/components/images/question.png';
-const images = [bombPic, img1, img2, img3, img4, img5, img6, img7, img8, img9, img10, img11, img12, img13, img14, img15, img16, img17, img18, img19, img20, img21, img22, img23, img24, img25, img26, exclaimPic, questionPic];
+const images = [bombPic, img1, img2, img3, img4, img5, img6, img7, img8, img9, img10, img11, img12, img13, img14, img15, img16, img17, img18, img19, img20, img21, img22, img23, img24, img25, img26, exclaimPic, questionPic, redBombPic];
 
 // Initialize core ThreeJS components
 let scene = new CubeScenes(false, 1, 2, images); // true - FilledScene; false - HollowScene

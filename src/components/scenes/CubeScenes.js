@@ -95,6 +95,7 @@ class CubeScenes extends Scene {
             this.gameOver = this.grid.checkWin();
         }
         else if (cube != undefined && cube.isBomb) {
+            cube.reveal = true;
             this.grid.revealBombs();
             this.gameOver = true;
             this.gameOverText = "You hit a bomb!";

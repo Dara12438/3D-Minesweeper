@@ -166,8 +166,13 @@ class CubeGrids extends Group {
     // reveals all bombs; occurs when user loses
     revealBombs() {
         for (const bomb of this.bombs) {
-            bomb.reveal = true;
-            bomb.material = this.revealMat[0];
+            if (bomb.reveal) {
+                bomb.material = this.revealMat[29];
+            }
+            else {
+                bomb.reveal = true;
+                bomb.material = this.revealMat[0];
+            }
         }
         this.removeRevealedCubes();
         this.removeAllCubes();
